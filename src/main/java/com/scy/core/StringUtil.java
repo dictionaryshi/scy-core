@@ -28,6 +28,9 @@ public class StringUtil {
     public static final String LINE = "|";
     public static final Pattern LINE_PATTERN = Pattern.compile("[|｜]+");
 
+    public static final String NUMBER_REGEX = "^[+-]?\\d+(\\.\\d+)?$";
+    public static final Pattern NUMBER_PATTERN = Pattern.compile(NUMBER_REGEX);
+
     public static boolean isEmpty(String str) {
         return str == null || str.trim().isEmpty() || str.trim().toLowerCase().equals(NULL);
     }
@@ -66,5 +69,12 @@ public class StringUtil {
 
     public static String removeEndIgnoreCase(String str, String remove) {
         return StringUtils.removeEndIgnoreCase(str, remove);
+    }
+
+    public static boolean isNumber(String str) {
+        if (StringUtil.isEmpty(str)) {
+            return Boolean.FALSE;
+        }
+        return NUMBER_PATTERN.matcher(str).matches();
     }
 }
