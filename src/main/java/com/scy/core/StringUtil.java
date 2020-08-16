@@ -45,8 +45,8 @@ public class StringUtil {
         return Joiner.on(separator).skipNulls().join(iterable);
     }
 
-    public static String join(String separator, String... strArr) {
-        return Joiner.on(separator).skipNulls().join(strArr);
+    public static String join(String separator, Object... objects) {
+        return Joiner.on(separator).skipNulls().join(objects);
     }
 
     public static List<String> split(String str, Pattern pattern) {
