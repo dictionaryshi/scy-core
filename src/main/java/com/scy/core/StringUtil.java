@@ -22,6 +22,8 @@ public class StringUtil {
 
     public static final String EMPTY = "";
 
+    public static final String COLON = ":";
+
     public static final String COMMA = ",";
     public static final Pattern COMMA_PATTERN = Pattern.compile("[,，]+");
 
@@ -41,6 +43,10 @@ public class StringUtil {
 
     public static String join(Iterable<?> iterable, String separator) {
         return Joiner.on(separator).skipNulls().join(iterable);
+    }
+
+    public static String join(String separator, String... strArr) {
+        return Joiner.on(separator).skipNulls().join(strArr);
     }
 
     public static List<String> split(String str, Pattern pattern) {
