@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -32,6 +33,8 @@ public class StringUtil {
 
     public static final String NUMBER_REGEX = "^[+-]?\\d+(\\.\\d+)?$";
     public static final Pattern NUMBER_PATTERN = Pattern.compile(NUMBER_REGEX);
+
+    private static final Pattern LINE_TO_HUMP_PATTERN = Pattern.compile("(_)([a-z])");
 
     public static boolean isEmpty(String str) {
         return str == null || str.trim().isEmpty() || str.trim().toLowerCase().equals(NULL);
@@ -82,5 +85,26 @@ public class StringUtil {
             return Boolean.FALSE;
         }
         return NUMBER_PATTERN.matcher(str).matches();
+    }
+
+    public static String lineToHump(String str) {
+        if (StringUtil.isEmpty(str)) {
+            return StringUtil.EMPTY;
+        }
+        str = str.trim().toLowerCase();
+        Matcher matcher = LINE_TO_HUMP_PATTERN.matcher(str);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, matcher.group(2).toUpperCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
+    public static String humpToLine(String str) {
+        if (StringUtil.isEmpty(str)) {
+            return StringUtil.EMPTY;
+        }
+        return str.replaceAll("[A-Z]", "_$0").toLowerCase();
     }
 }
