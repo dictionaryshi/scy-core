@@ -13,6 +13,9 @@ import org.slf4j.MDC;
  */
 public class TraceUtil {
 
+    private TraceUtil() {
+    }
+
     public static final String TRACE_ID = "trace_id";
 
     /**
