@@ -34,7 +34,11 @@ public class TraceUtil {
      * 获取链路id
      */
     public static String getTraceId() {
-        return (String) ThreadLocalUtil.get(TRACE_ID);
+        String traceId = (String) ThreadLocalUtil.get(TRACE_ID);
+        if (StringUtil.isEmpty(traceId)) {
+            return StringUtil.EMPTY;
+        }
+        return traceId;
     }
 
     /**
