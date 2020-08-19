@@ -27,6 +27,11 @@ public class StringUtil {
 
     public static final String COLON = ":";
 
+    public static final String CR = StringUtils.CR;
+    public static final String LF = StringUtils.LF;
+    public static final String CRLF = CR + LF;
+    public static final String CR_LF_REGEX = "[" + CRLF + "]";
+
     public static final String COMMA = ",";
     public static final Pattern COMMA_PATTERN = Pattern.compile("[,，]+");
 
@@ -108,5 +113,12 @@ public class StringUtil {
             return StringUtil.EMPTY;
         }
         return str.replaceAll("[A-Z]", "_$0").toLowerCase();
+    }
+
+    public static String replaceCrLf(String str, String replacement) {
+        if (StringUtil.isEmpty(str)) {
+            return StringUtil.EMPTY;
+        }
+        return str.replaceAll(CR_LF_REGEX, replacement);
     }
 }
