@@ -27,6 +27,8 @@ public class StringUtil {
 
     public static final String COLON = ":";
 
+    public static final String ARROW = "=>";
+
     public static final String CR = StringUtils.CR;
     public static final String LF = StringUtils.LF;
     public static final String CRLF = CR + LF;
