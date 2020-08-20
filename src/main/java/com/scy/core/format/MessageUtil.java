@@ -83,6 +83,34 @@ public class MessageUtil {
         return messageUtil.toString();
     }
 
+    public static String format(String message) {
+        return format(message, null);
+    }
+
+    public static String format(String message, String k1, Object v1) {
+        return format(message, null, k1, v1);
+    }
+
+    public static String format(String message, String k1, Object v1, String k2, Object v2) {
+        return format(message, null, k1, v1, k2, v2);
+    }
+
+    public static String format(String message, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
+        return format(message, null, k1, v1, k2, v2, k3, v3);
+    }
+
+    public static String format(String message, String k1, Object v1, String k2, Object v2, String k3, Object v3, String k4, Object v4) {
+        return format(message, null, k1, v1, k2, v2, k3, v3, k4, v4);
+    }
+
+    public static String format(String message, String k1, Object v1, String k2, Object v2, String k3, Object v3, String k4, Object v4, String k5, Object v5) {
+        return format(message, null, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
+    }
+
+    public static String format(String message, String k1, Object v1, String k2, Object v2, String k3, Object v3, String k4, Object v4, String k5, Object v5, String k6, Object v6) {
+        return format(message, null, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
