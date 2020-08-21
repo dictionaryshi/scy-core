@@ -1,0 +1,49 @@
+package com.scy.core.rest;
+
+import com.scy.core.ObjectUtil;
+import com.scy.core.enums.ResponseCodeEnum;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.ToString;
+
+import java.io.Serializable;
+
+/**
+ * ResponseResult
+ *
+ * @author shichunyang
+ * Created by shichunyang on 2020/8/21.
+ */
+@ApiModel("响应结果")
+@Getter
+@ToString
+public class ResponseResult<T> implements Serializable {
+
+    @ApiModelProperty(value = "响应状态码(0:成功, 其它:失败)", required = true, example = "0")
+    private final int code;
+
+    @ApiModelProperty(value = "请求状态", required = true, example = "true")
+    private final boolean success;
+
+    @ApiModelProperty(value = "错误信息")
+    private final String message;
+
+    @ApiModelProperty(value = "响应数据")
+    private final T data;
+
+    private ResponseResult(int code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+        this.success = ObjectUtil.equals(code, ResponseCodeEnum.SUCCESS.getCode());
+    }
+
+    public static <T> ResponseResult<T> success(T data) {
+        return new ResponseResult<>(ResponseCodeEnum.SUCCESS.getCode(), null, data);
+    }
+
+    public static <T> ResponseResult<T> error(int code, String message) {
+        return new ResponseResult<>(code, message, null);
+    }
+}
