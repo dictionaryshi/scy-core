@@ -23,7 +23,7 @@ public class ResponseResult<T> implements Serializable {
     @ApiModelProperty(value = "响应状态码(0:成功, 其它:失败)", required = true, example = "0")
     private final int code;
 
-    @ApiModelProperty(value = "请求状态", required = true, example = "true")
+    @ApiModelProperty(value = "响应状态", required = true, example = "true")
     private final boolean success;
 
     @ApiModelProperty(value = "错误信息")
