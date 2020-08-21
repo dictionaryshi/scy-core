@@ -19,6 +19,9 @@ import java.util.stream.Stream;
 @Slf4j
 public class DiffUtil {
 
+    private DiffUtil() {
+    }
+
     /**
      * 获取对象的差异
      */
