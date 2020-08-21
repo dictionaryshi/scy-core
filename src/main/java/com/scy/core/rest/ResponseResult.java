@@ -43,7 +43,7 @@ public class ResponseResult<T> implements Serializable {
         return new ResponseResult<>(ResponseCodeEnum.SUCCESS.getCode(), null, data);
     }
 
-    public static <T> ResponseResult<T> error(int code, String message) {
-        return new ResponseResult<>(code, message, null);
+    public static <T> ResponseResult<T> error(int code, String message, T data) {
+        return new ResponseResult<>(code, message, data);
     }
 }
