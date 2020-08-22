@@ -1,5 +1,6 @@
 package com.scy.core.spring;
 
+import com.scy.core.exception.BusinessException;
 import com.scy.core.reflect.ClassUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -12,12 +13,20 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  */
 public class AbstractBeanPostProcessor<T> implements BeanPostProcessor {
 
-    private final Class<T> beanType;
+    private Class<T> beanType;
 
     public AbstractBeanPostProcessor() {
-        @SuppressWarnings(ClassUtil.UNCHECKED)
-        Class<T> genericSuperclass = (Class<T>) this.getClass().getGenericSuperclass();
-        this.beanType = ClassUtil.getGenericType(genericSuperclass);
+        try {
+            this.beanType = ClassUtil.getGenericType(this.getClass());
+        } catch (Throwable e1) {
+            try {
+                @SuppressWarnings(ClassUtil.UNCHECKED)
+                Class<T> genericSuperclass = (Class<T>) this.getClass().getGenericSuperclass();
+                this.beanType = ClassUtil.getGenericType(genericSuperclass);
+            } catch (Throwable e2) {
+                throw new BusinessException("AbstractBeanPostProcessor error", e2);
+            }
+        }
     }
 
     @SuppressWarnings(ClassUtil.UNCHECKED)
