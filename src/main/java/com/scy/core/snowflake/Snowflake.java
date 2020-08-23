@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * SnowflakeUtil
+ * Snowflake
  *
  * @author shichunyang
  * Created by shichunyang on 2020/8/23.
@@ -65,7 +65,7 @@ public class Snowflake {
 
     }
 
-    protected long nextMillis(long lastTimestamp) {
+    private long nextMillis(long lastTimestamp) {
         long timestamp = now();
         while (timestamp <= lastTimestamp) {
             timestamp = now();
