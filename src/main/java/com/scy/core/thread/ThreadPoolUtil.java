@@ -41,10 +41,8 @@ public class ThreadPoolUtil {
                     return Boolean.FALSE;
                 }
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             if (e instanceof CancellationException) {
-            } else if (e instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
             } else {
                 log.error(MessageUtil.format("ThreadPoolUtil.check error", e));
             }
