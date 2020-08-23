@@ -38,11 +38,11 @@ public class BooleanFutureTask extends FutureTask<Boolean> {
         } catch (Throwable e) {
             countDown();
             if (e instanceof CancellationException) {
-                log.warn(MessageUtil.format("BooleanFutureTask cancel", e, "taskName", taskName));
+                log.warn(MessageUtil.format("BooleanFutureTask cancel", "taskName", taskName));
             } else if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
             } else {
-                log.error(MessageUtil.format("BooleanFutureTask error"), e, "taskName", taskName);
+                log.error(MessageUtil.format("BooleanFutureTask error", e, "taskName", taskName));
             }
         } finally {
             countDownLatch.countDown();
