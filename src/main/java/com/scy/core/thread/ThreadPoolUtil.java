@@ -1,5 +1,6 @@
 package com.scy.core.thread;
 
+import com.scy.core.format.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class ThreadPoolUtil {
             } else if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
             } else {
-                log.error("ThreadPoolUtil.check error", e);
+                log.error(MessageUtil.format("ThreadPoolUtil.check error", e));
             }
             return Boolean.FALSE;
         }
