@@ -15,7 +15,7 @@ public class RuntimeUtil {
         return Runtime.getRuntime().availableProcessors();
     }
 
-    public void addShutdownHook(Thread hook) {
+    public static void addShutdownHook(Thread hook) {
         Runtime.getRuntime().addShutdownHook(hook);
     }
 }
