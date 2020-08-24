@@ -48,7 +48,8 @@ public class BooleanFutureTask extends FutureTask<Boolean> {
     }
 
     private void countDown() {
-        for (int i = 0; i < countDownLatch.getCount() - 1; i++) {
+        long count = countDownLatch.getCount();
+        for (int i = 0; i < count; i++) {
             countDownLatch.countDown();
         }
     }
