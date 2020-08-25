@@ -1,12 +1,12 @@
 package com.scy.core.thread;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.scy.core.RuntimeUtil;
 import com.scy.core.format.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -50,5 +50,42 @@ public class ThreadPoolUtil {
         }
 
         return Boolean.TRUE;
+    }
+
+    public static ThreadPoolExecutor getThreadPool(
+            String poolName,
+            int corePoolSize,
+            int maximumPoolSize,
+            int queueSize
+    ) {
+        ThreadFactory threadFactory = new ThreadFactoryBuilder()
+                .setNameFormat(poolName + "-thread-pool-%d")
+                .setUncaughtExceptionHandler((thread, throwable) -> {
+                })
+                .build();
+
+        TransmittableThreadPoolExecutor transmittableThreadPoolExecutor = new TransmittableThreadPoolExecutor(
+                corePoolSize, maximumPoolSize, 300, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueSize), threadFactory,
+                (runnable, threadPoolExecutor) -> {
+                }
+        );
+
+        RuntimeUtil.addShutdownHook(new Thread(() -> {
+            try {
+                shutdown(transmittableThreadPoolExecutor, poolName);
+            } catch (Throwable e) {
+                log.error(MessageUtil.format("thread pool shutdown error", e, "poolName", poolName));
+            }
+        }));
+
+        return transmittableThreadPoolExecutor;
+    }
+
+    public static void shutdown(ExecutorService executorService, String poolName) throws Throwable {
+        executorService.shutdown();
+        while (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+            log.warn(MessageUtil.format("thread pool shutdown awaitTermination", "poolName", poolName));
+        }
+        executorService.shutdownNow();
     }
 }
