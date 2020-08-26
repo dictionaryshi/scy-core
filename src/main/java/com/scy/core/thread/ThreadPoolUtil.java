@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.scy.core.RuntimeUtil;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.model.ThreadMonitorBO;
-import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -62,11 +61,6 @@ public class ThreadPoolUtil {
     ) {
         ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat(poolName + "-thread-pool-%d")
-                .setUncaughtExceptionHandler((thread, throwable) -> {
-                    TraceUtil.setMdcTraceId();
-                    log.error(MessageUtil.format("UncaughtExceptionHandler error", throwable, "poolName", poolName, "thread", Thread.currentThread().getName()));
-                    TraceUtil.clearMdc();
-                })
                 .build();
 
         TransmittableThreadPoolExecutor transmittableThreadPoolExecutor = new TransmittableThreadPoolExecutor(
@@ -104,5 +98,29 @@ public class ThreadPoolUtil {
         threadMonitorBO.setTaskCount(threadPoolExecutor.getTaskCount());
         threadMonitorBO.setCompletedTaskCount(threadPoolExecutor.getCompletedTaskCount());
         return threadMonitorBO;
+    }
+
+    public static ScheduledThreadPoolExecutor getScheduledPool(
+            String poolName,
+            int corePoolSize
+    ) {
+        ThreadFactory threadFactory = new ThreadFactoryBuilder()
+                .setNameFormat(poolName + "-scheduled-thread-pool-%d")
+                .build();
+        TransmittableScheduledThreadPoolExecutor transmittableScheduledThreadPoolExecutor = new TransmittableScheduledThreadPoolExecutor(
+                corePoolSize,
+                threadFactory,
+                (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject", "poolName", poolName, "thread", Thread.currentThread().getName()))
+        );
+
+        RuntimeUtil.addShutdownHook(new Thread(() -> {
+            try {
+                shutdown(transmittableScheduledThreadPoolExecutor, poolName);
+            } catch (Throwable e) {
+                log.error(MessageUtil.format("thread pool shutdown error", e, "poolName", poolName, "thread", Thread.currentThread().getName()));
+            }
+        }));
+
+        return transmittableScheduledThreadPoolExecutor;
     }
 }
