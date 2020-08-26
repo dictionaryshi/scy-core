@@ -26,7 +26,7 @@ public class ThreadMonitorBO {
     private int maximumPoolSize;
 
     /**
-     * 用户配置队列数
+     * 当前线程池队列数
      */
     private long workQueueSize;
 
