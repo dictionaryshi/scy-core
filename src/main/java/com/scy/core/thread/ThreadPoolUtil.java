@@ -3,6 +3,7 @@ package com.scy.core.thread;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.scy.core.RuntimeUtil;
 import com.scy.core.format.MessageUtil;
+import com.scy.core.model.ThreadMonitorBO;
 import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,5 +91,18 @@ public class ThreadPoolUtil {
             log.warn(MessageUtil.format("thread pool shutdown awaitTermination", "poolName", poolName, "thread", Thread.currentThread().getName()));
         }
         executorService.shutdownNow();
+    }
+
+    public static ThreadMonitorBO getMonitorInfo(ThreadPoolExecutor threadPoolExecutor) {
+        ThreadMonitorBO threadMonitorBO = new ThreadMonitorBO();
+        threadMonitorBO.setCorePoolSize(threadPoolExecutor.getCorePoolSize());
+        threadMonitorBO.setMaximumPoolSize(threadPoolExecutor.getMaximumPoolSize());
+        threadMonitorBO.setWorkQueueSize(threadPoolExecutor.getQueue().size());
+        threadMonitorBO.setPoolSize(threadPoolExecutor.getPoolSize());
+        threadMonitorBO.setActiveCount(threadPoolExecutor.getActiveCount());
+        threadMonitorBO.setLargestPoolSize(threadPoolExecutor.getLargestPoolSize());
+        threadMonitorBO.setTaskCount(threadPoolExecutor.getTaskCount());
+        threadMonitorBO.setCompletedTaskCount(threadPoolExecutor.getCompletedTaskCount());
+        return threadMonitorBO;
     }
 }
