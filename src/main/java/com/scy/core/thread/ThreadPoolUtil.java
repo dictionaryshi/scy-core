@@ -2,8 +2,8 @@ package com.scy.core.thread;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.scy.core.RuntimeUtil;
-import com.scy.core.StringUtil;
 import com.scy.core.format.MessageUtil;
+import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -21,8 +21,6 @@ public class ThreadPoolUtil {
 
     private ThreadPoolUtil() {
     }
-
-    public static final String THREAD_TASK_MESSAGE = "thread_task_message";
 
     public static boolean check(
             ExecutorService executorService,
@@ -63,12 +61,20 @@ public class ThreadPoolUtil {
     ) {
         ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat(poolName + "-thread-pool-%d")
-                .setUncaughtExceptionHandler((thread, throwable) -> log.error(MessageUtil.format("UncaughtExceptionHandler error " + getThreadTaskMessage(), throwable)))
+                .setUncaughtExceptionHandler((thread, throwable) -> {
+                    TraceUtil.setMdcTraceId();
+                    log.error(MessageUtil.format("UncaughtExceptionHandler error", throwable, "poolName", poolName));
+                    TraceUtil.clearMdc();
+                })
                 .build();
 
         TransmittableThreadPoolExecutor transmittableThreadPoolExecutor = new TransmittableThreadPoolExecutor(
                 corePoolSize, maximumPoolSize, 300, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueSize), threadFactory,
-                (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject " + getThreadTaskMessage()))
+                (runnable, threadPoolExecutor) -> {
+                    TraceUtil.setMdcTraceId();
+                    log.error(MessageUtil.format("thread pool reject", "poolName", poolName));
+                    TraceUtil.clearMdc();
+                }
         );
 
         RuntimeUtil.addShutdownHook(new Thread(() -> {
@@ -88,17 +94,5 @@ public class ThreadPoolUtil {
             log.warn(MessageUtil.format("thread pool shutdown awaitTermination", "poolName", poolName));
         }
         executorService.shutdownNow();
-    }
-
-    public static void setThreadTaskMessage(String message) {
-        ThreadLocalUtil.put(THREAD_TASK_MESSAGE, message);
-    }
-
-    public static String getThreadTaskMessage() {
-        String message = (String) ThreadLocalUtil.get(THREAD_TASK_MESSAGE);
-        if (StringUtil.isEmpty(message)) {
-            return StringUtil.EMPTY;
-        }
-        return message;
     }
 }
