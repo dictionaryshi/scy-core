@@ -63,25 +63,21 @@ public class ThreadPoolUtil {
                 .setNameFormat(poolName + "-thread-pool-%d")
                 .setUncaughtExceptionHandler((thread, throwable) -> {
                     TraceUtil.setMdcTraceId();
-                    log.error(MessageUtil.format("UncaughtExceptionHandler error", throwable, "poolName", poolName));
+                    log.error(MessageUtil.format("UncaughtExceptionHandler error", throwable, "poolName", poolName, "thread", Thread.currentThread().getName()));
                     TraceUtil.clearMdc();
                 })
                 .build();
 
         TransmittableThreadPoolExecutor transmittableThreadPoolExecutor = new TransmittableThreadPoolExecutor(
                 corePoolSize, maximumPoolSize, 300, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueSize), threadFactory,
-                (runnable, threadPoolExecutor) -> {
-                    TraceUtil.setMdcTraceId();
-                    log.error(MessageUtil.format("thread pool reject", "poolName", poolName));
-                    TraceUtil.clearMdc();
-                }
+                (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject", "poolName", poolName, "thread", Thread.currentThread().getName()))
         );
 
         RuntimeUtil.addShutdownHook(new Thread(() -> {
             try {
                 shutdown(transmittableThreadPoolExecutor, poolName);
             } catch (Throwable e) {
-                log.error(MessageUtil.format("thread pool shutdown error", e, "poolName", poolName));
+                log.error(MessageUtil.format("thread pool shutdown error", e, "poolName", poolName, "thread", Thread.currentThread().getName()));
             }
         }));
 
@@ -91,7 +87,7 @@ public class ThreadPoolUtil {
     public static void shutdown(ExecutorService executorService, String poolName) throws Throwable {
         executorService.shutdown();
         while (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
-            log.warn(MessageUtil.format("thread pool shutdown awaitTermination", "poolName", poolName));
+            log.warn(MessageUtil.format("thread pool shutdown awaitTermination", "poolName", poolName, "thread", Thread.currentThread().getName()));
         }
         executorService.shutdownNow();
     }
