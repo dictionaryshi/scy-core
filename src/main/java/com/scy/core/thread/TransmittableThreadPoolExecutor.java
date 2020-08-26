@@ -1,6 +1,7 @@
 package com.scy.core.thread;
 
 import com.alibaba.ttl.TtlRunnable;
+import com.scy.core.format.MessageUtil;
 import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +25,7 @@ public class TransmittableThreadPoolExecutor extends ThreadPoolExecutor {
     @Override
     public void beforeExecute(Thread thread, Runnable runnable) {
         TraceUtil.setMdcTraceId();
+        log.info(MessageUtil.format("thread start", "thread", Thread.currentThread().getName()));
     }
 
     @Override
@@ -33,6 +35,7 @@ public class TransmittableThreadPoolExecutor extends ThreadPoolExecutor {
 
     @Override
     public void afterExecute(Runnable runnable, Throwable throwable) {
+        log.info(MessageUtil.format("thread end", "thread", Thread.currentThread().getName()));
         TraceUtil.clearMdc();
     }
 }
