@@ -31,6 +31,16 @@ public class TransmittableThreadPoolExecutor extends ThreadPoolExecutor {
         super.execute(TtlRunnable.get(runnable));
     }
 
+    public void execute(String message, Runnable runnable) {
+        ThreadPoolUtil.setThreadTaskMessage(message);
+        this.execute(runnable);
+    }
+
+    public <T> Future<T> submit(String message, Callable<T> callable) {
+        ThreadPoolUtil.setThreadTaskMessage(message);
+        return super.submit(callable);
+    }
+
     @Override
     public void afterExecute(Runnable runnable, Throwable throwable) {
         TraceUtil.clearMdc();
