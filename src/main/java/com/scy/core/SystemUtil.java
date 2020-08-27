@@ -1,5 +1,8 @@
 package com.scy.core;
 
+import java.time.ZoneId;
+import java.util.TimeZone;
+
 /**
  * SystemUtil
  *
@@ -15,4 +18,9 @@ public class SystemUtil {
      * 系统换行符
      */
     public static final String SYSTEM_LINE_BREAK = System.lineSeparator();
+
+    /**
+     * 上海时区
+     */
+    public static final TimeZone TIME_ZONE_SHANG_HAI = TimeZone.getTimeZone(ZoneId.SHORT_IDS.get("CTT"));
 }
