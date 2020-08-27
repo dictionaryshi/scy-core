@@ -23,12 +23,12 @@ public class ThreadPoolUtil {
     }
 
     public static boolean check(
-            ExecutorService executorService,
+            ThreadPoolExecutor threadPoolExecutor,
             List<AbstractBooleanCallable> callables
     ) {
         CountDownLatch countDownLatch = new CountDownLatch(callables.size());
         List<BooleanFutureTask> booleanFutureTasks = callables.stream().map(callable -> new BooleanFutureTask(callable, countDownLatch)).collect(Collectors.toList());
-        booleanFutureTasks.forEach(executorService::execute);
+        booleanFutureTasks.forEach(threadPoolExecutor::execute);
 
         try {
             countDownLatch.await();
