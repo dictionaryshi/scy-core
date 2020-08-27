@@ -37,6 +37,6 @@ public class TransmittableScheduledThreadPoolExecutor extends ScheduledThreadPoo
     @Override
     public void afterExecute(Runnable runnable, Throwable throwable) {
         log.info(MessageUtil.format("thread end", "thread", Thread.currentThread().getName()));
-        TraceUtil.clearMdc();
+        TraceUtil.clearTrace();
     }
 }
