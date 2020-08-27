@@ -65,7 +65,8 @@ public class ThreadPoolUtil {
 
         TransmittableThreadPoolExecutor transmittableThreadPoolExecutor = new TransmittableThreadPoolExecutor(
                 corePoolSize, maximumPoolSize, 300, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueSize), threadFactory,
-                (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject", "poolName", poolName, "thread", Thread.currentThread().getName()))
+                (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject",
+                        "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)))
         );
 
         RuntimeUtil.addShutdownHook(new Thread(() -> {
@@ -113,7 +114,8 @@ public class ThreadPoolUtil {
         TransmittableScheduledThreadPoolExecutor transmittableScheduledThreadPoolExecutor = new TransmittableScheduledThreadPoolExecutor(
                 corePoolSize,
                 threadFactory,
-                (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject", "poolName", poolName, "thread", Thread.currentThread().getName()))
+                (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject",
+                        "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)))
         );
 
         RuntimeUtil.addShutdownHook(new Thread(() -> {
