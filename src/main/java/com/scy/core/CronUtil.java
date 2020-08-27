@@ -50,6 +50,9 @@ public class CronUtil {
         List<Date> nextExecuteTimes = Lists.newArrayList();
         for (int i = 0; i < times; i++) {
             Date nextExecuteTime = nextExecuteTime(cron, startTime);
+            if (ObjectUtil.isNull(nextExecuteTime)) {
+                return nextExecuteTimes;
+            }
             nextExecuteTimes.add(nextExecuteTime);
             startTime = nextExecuteTime;
         }
