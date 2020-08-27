@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.scy.core.StringUtil;
+import com.scy.core.SystemUtil;
 import com.scy.core.format.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,9 +59,7 @@ public class JsonUtil {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.setDateFormat(new SimpleDateFormat(DateUtil.PATTERN_SECOND));
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-        TimeZone timeZone = TimeZone.getTimeZone(ZoneId.SHORT_IDS.get("CTT"));
-        mapper.setTimeZone(timeZone);
+        mapper.setTimeZone(SystemUtil.TIME_ZONE_SHANG_HAI);
         return mapper;
     }
 
