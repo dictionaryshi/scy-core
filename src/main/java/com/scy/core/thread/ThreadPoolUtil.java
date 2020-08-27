@@ -79,12 +79,15 @@ public class ThreadPoolUtil {
         return transmittableThreadPoolExecutor;
     }
 
-    public static void shutdown(ExecutorService executorService, String poolName) throws Throwable {
-        executorService.shutdown();
-        while (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
-            log.warn(MessageUtil.format("thread pool shutdown awaitTermination", "poolName", poolName, "thread", Thread.currentThread().getName()));
+    public static void shutdown(ThreadPoolExecutor threadPoolExecutor, String poolName) throws Throwable {
+        threadPoolExecutor.shutdown();
+        while (!threadPoolExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
+            log.warn(MessageUtil.format("thread pool shutdown awaitTermination",
+                    "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)));
         }
-        executorService.shutdownNow();
+        log.warn(MessageUtil.format("thread pool shutdown awaitTermination finish",
+                "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)));
+        threadPoolExecutor.shutdownNow();
     }
 
     public static ThreadMonitorBO getMonitorInfo(ThreadPoolExecutor threadPoolExecutor) {
