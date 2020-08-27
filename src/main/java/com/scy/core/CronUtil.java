@@ -1,10 +1,12 @@
 package com.scy.core;
 
+import com.google.common.collect.Lists;
 import com.scy.core.format.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.support.CronSequenceGenerator;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * CronUtil
@@ -42,5 +44,15 @@ public class CronUtil {
         }
 
         return nextExecuteTime;
+    }
+
+    public static List<Date> nextExecuteTime(String cron, Date startTime, int times) {
+        List<Date> nextExecuteTimes = Lists.newArrayList();
+        for (int i = 0; i < times; i++) {
+            Date nextExecuteTime = nextExecuteTime(cron, startTime);
+            nextExecuteTimes.add(nextExecuteTime);
+            startTime = nextExecuteTime;
+        }
+        return nextExecuteTimes;
     }
 }
