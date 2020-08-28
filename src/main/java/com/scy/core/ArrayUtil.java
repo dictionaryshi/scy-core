@@ -50,14 +50,6 @@ public class ArrayUtil {
     }
 
     public static boolean isEmpty(Object arr) {
-        if (arr == null) {
-            return Boolean.TRUE;
-        }
-
-        if (!isArray(arr)) {
-            return Boolean.TRUE;
-        }
-
         return getLength(arr) == 0;
     }
 }
