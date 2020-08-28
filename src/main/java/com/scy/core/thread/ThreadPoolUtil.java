@@ -22,7 +22,7 @@ public class ThreadPoolUtil {
     private ThreadPoolUtil() {
     }
 
-    public static boolean check(
+    public static boolean parallelCheck(
             ThreadPoolExecutor threadPoolExecutor,
             List<AbstractBooleanCallable> callables
     ) {
@@ -32,22 +32,27 @@ public class ThreadPoolUtil {
 
         try {
             countDownLatch.await();
+        } catch (InterruptedException e) {
+            log.error(MessageUtil.format("parallelCheck await interrupted", "thread", Thread.currentThread().getName()));
+        }
 
-            for (BooleanFutureTask task : booleanFutureTasks) {
-                task.cancel(Boolean.TRUE);
-            }
+        for (BooleanFutureTask task : booleanFutureTasks) {
+            task.cancel(Boolean.TRUE);
+        }
 
-            for (BooleanFutureTask task : booleanFutureTasks) {
+        for (BooleanFutureTask task : booleanFutureTasks) {
+            try {
                 if (!task.get()) {
                     return Boolean.FALSE;
                 }
+            } catch (Throwable e) {
+                if (e instanceof CancellationException) {
+                    log.warn(MessageUtil.format("parallelCheck cancel", "taskName", task.getTaskName(), "thread", Thread.currentThread().getName()));
+                } else {
+                    log.error(MessageUtil.format("parallelCheck error", e, "taskName", task.getTaskName(), "thread", Thread.currentThread().getName()));
+                }
+                return Boolean.FALSE;
             }
-        } catch (Throwable e) {
-            if (e instanceof CancellationException) {
-            } else {
-                log.error(MessageUtil.format("ThreadPoolUtil.check error", e));
-            }
-            return Boolean.FALSE;
         }
 
         return Boolean.TRUE;

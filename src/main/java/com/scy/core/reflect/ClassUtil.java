@@ -63,6 +63,13 @@ public class ClassUtil {
     }
 
     /**
+     * 获取类的包名
+     */
+    public static String getPackageName(String clazzName) {
+        return ClassUtils.getPackageName(clazzName);
+    }
+
+    /**
      * 获取泛型
      */
     @SuppressWarnings(UNCHECKED)
