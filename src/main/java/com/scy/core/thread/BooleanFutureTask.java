@@ -1,6 +1,7 @@
 package com.scy.core.thread;
 
 import com.scy.core.format.MessageUtil;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CancellationException;
@@ -14,6 +15,7 @@ import java.util.concurrent.FutureTask;
  * Created by shichunyang on 2020/8/23.
  */
 @Slf4j
+@Getter
 public class BooleanFutureTask extends FutureTask<Boolean> {
 
     private final String taskName;
@@ -31,16 +33,16 @@ public class BooleanFutureTask extends FutureTask<Boolean> {
         try {
             if (!super.get()) {
                 countDown();
-                log.info(MessageUtil.format("BooleanFutureTask fail", "taskName", taskName));
+                log.info(MessageUtil.format("BooleanFutureTask fail", "taskName", taskName, "thread", Thread.currentThread().getName()));
             } else {
-                log.info(MessageUtil.format("BooleanFutureTask success", "taskName", taskName));
+                log.info(MessageUtil.format("BooleanFutureTask success", "taskName", taskName, "thread", Thread.currentThread().getName()));
             }
         } catch (Throwable e) {
             countDown();
             if (e instanceof CancellationException) {
-                log.warn(MessageUtil.format("BooleanFutureTask cancel", "taskName", taskName));
+                log.warn(MessageUtil.format("BooleanFutureTask cancel", "taskName", taskName, "thread", Thread.currentThread().getName()));
             } else {
-                log.error(MessageUtil.format("BooleanFutureTask error", e, "taskName", taskName));
+                log.error(MessageUtil.format("BooleanFutureTask error", e, "taskName", taskName, "thread", Thread.currentThread().getName()));
             }
         } finally {
             countDownLatch.countDown();
