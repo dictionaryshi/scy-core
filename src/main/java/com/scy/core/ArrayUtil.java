@@ -41,21 +41,15 @@ public class ArrayUtil {
         if (arr == null) {
             return 0;
         }
-        if (!arr.getClass().isArray()) {
+
+        if (!isArray(arr)) {
             return 0;
         }
+
         return ArrayUtils.getLength(arr);
     }
 
     public static boolean isEmpty(Object arr) {
-        if (arr == null) {
-            return Boolean.TRUE;
-        }
-
-        if (!arr.getClass().isArray()) {
-            return Boolean.TRUE;
-        }
-
-        return ArrayUtils.getLength(arr) == 0;
+        return getLength(arr) == 0;
     }
 }
