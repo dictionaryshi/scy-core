@@ -41,9 +41,11 @@ public class ArrayUtil {
         if (arr == null) {
             return 0;
         }
-        if (!arr.getClass().isArray()) {
+
+        if (!isArray(arr)) {
             return 0;
         }
+
         return ArrayUtils.getLength(arr);
     }
 
@@ -52,10 +54,10 @@ public class ArrayUtil {
             return Boolean.TRUE;
         }
 
-        if (!arr.getClass().isArray()) {
+        if (!isArray(arr)) {
             return Boolean.TRUE;
         }
 
-        return ArrayUtils.getLength(arr) == 0;
+        return getLength(arr) == 0;
     }
 }
