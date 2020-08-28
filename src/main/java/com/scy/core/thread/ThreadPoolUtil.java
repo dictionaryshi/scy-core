@@ -43,6 +43,7 @@ public class ThreadPoolUtil {
         for (BooleanFutureTask task : booleanFutureTasks) {
             try {
                 if (!task.get()) {
+                    log.info(MessageUtil.format("parallelCheck fail", "taskName", task.getTaskName(), "thread", Thread.currentThread().getName()));
                     return Boolean.FALSE;
                 }
             } catch (Throwable e) {
