@@ -23,4 +23,9 @@ public class SystemUtil {
      * 上海时区
      */
     public static final TimeZone TIME_ZONE_SHANG_HAI = TimeZone.getTimeZone(ZoneId.SHORT_IDS.get("CTT"));
+
+    /**
+     * 基础包名
+     */
+    public static final String BASE_PACKAGE = "com.scy";
 }
