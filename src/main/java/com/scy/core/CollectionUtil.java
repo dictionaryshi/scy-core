@@ -2,6 +2,7 @@ package com.scy.core;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.scy.core.encode.UrlEncodeUtil;
 import org.springframework.lang.Nullable;
 
 import java.util.*;
@@ -116,5 +117,23 @@ public class CollectionUtil {
         HashMap<K, V> hashMap = newHashMap(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
         hashMap.put(k6, v6);
         return hashMap;
+    }
+
+    public static String map2Str(Map<String, ?> params, boolean urlEncode) {
+        if (isEmpty(params)) {
+            return StringUtil.EMPTY;
+        }
+        StringBuilder result = new StringBuilder();
+        Map<String, ?> treeMap = new TreeMap<>(params);
+        treeMap.forEach((key, value) -> {
+            String valueStr;
+            if (urlEncode) {
+                valueStr = UrlEncodeUtil.urlEncode(ObjectUtil.obj2Str(value).trim());
+            } else {
+                valueStr = ObjectUtil.obj2Str(value).trim();
+            }
+            result.append(key).append("=").append(valueStr).append("&");
+        });
+        return result.substring(0, result.length() - 1);
     }
 }
