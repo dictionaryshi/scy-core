@@ -72,16 +72,17 @@ public class ParamUtil {
 
         Field[] fields = paramClass.getDeclaredFields();
         for (Field field : fields) {
-            if (!ObjectUtil.equals(field.getType(), String.class)) {
-                continue;
-            }
             field.setAccessible(Boolean.TRUE);
             try {
-                String value = (String) field.get(param);
-                if (ObjectUtil.isNull(value)) {
+                Object valueObject = field.get(param);
+                if (ObjectUtil.isNull(valueObject)) {
                     continue;
                 }
-                field.set(param, value.trim());
+                Class<?> fieldType = field.getType();
+                if (!ObjectUtil.equals(fieldType, String.class) && !(valueObject instanceof String)) {
+                    continue;
+                }
+                field.set(param, ((String) valueObject).trim());
             } catch (Throwable e) {
                 log.error(MessageUtil.format("trimParam error", e, "field", field.getName(), "param", param));
             }
