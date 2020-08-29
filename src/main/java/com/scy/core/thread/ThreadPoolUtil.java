@@ -22,6 +22,8 @@ public class ThreadPoolUtil {
     private ThreadPoolUtil() {
     }
 
+    public static final String FORK_JOIN_POOL_CORE_SIZE = "java.util.concurrent.ForkJoinPool.common.parallelism";
+
     public static boolean parallelCheck(
             ThreadPoolExecutor threadPoolExecutor,
             List<AbstractBooleanCallable> callables
@@ -133,5 +135,10 @@ public class ThreadPoolUtil {
         }));
 
         return transmittableScheduledThreadPoolExecutor;
+    }
+
+    public static void setForkJoinPoolCoreSize(int coreSize) {
+        // 主线程也会参与执行
+        System.setProperty(FORK_JOIN_POOL_CORE_SIZE, String.valueOf(coreSize - 1));
     }
 }
