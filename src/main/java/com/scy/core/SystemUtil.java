@@ -1,5 +1,7 @@
 package com.scy.core;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
@@ -28,4 +30,21 @@ public class SystemUtil {
      * 基础包名
      */
     public static final String BASE_PACKAGE = "com.scy";
+
+    /**
+     * 工作目录
+     */
+    public static final String WORKING_DIRECTORY = "user.dir";
+
+    public static final Charset CHARSET_UTF_8 = StandardCharsets.UTF_8;
+
+    public static final String CHARSET_UTF_8_STR = StandardCharsets.UTF_8.name();
+
+    public static String getWorkingDirectory() {
+        return System.getProperty(WORKING_DIRECTORY);
+    }
+
+    public static long currentTimeMillis() {
+        return System.currentTimeMillis();
+    }
 }
