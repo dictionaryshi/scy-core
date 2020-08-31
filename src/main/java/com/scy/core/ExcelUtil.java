@@ -2,13 +2,17 @@ package com.scy.core;
 
 import com.google.common.collect.Lists;
 import com.scy.core.format.MessageUtil;
+import jxl.Cell;
+import jxl.Sheet;
 import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,5 +69,41 @@ public class ExcelUtil {
                 }
             }
         }
+    }
+
+    public static List<List<String>> readExcel(InputStream in, boolean ignoreHeader) {
+        List<List<String>> rows = new ArrayList<>();
+        Workbook workbook = null;
+        try {
+            workbook = Workbook.getWorkbook(in);
+
+            Sheet[] sheets = workbook.getSheets();
+            for (Sheet sheet : sheets) {
+                int start = 0;
+                if (ignoreHeader) {
+                    start = 1;
+                }
+
+                for (int sheetRow = start; sheetRow < sheet.getRows(); sheetRow++) {
+                    List<String> columns = new ArrayList<>();
+                    for (int sheetColumn = 0; sheetColumn < sheet.getColumns(); sheetColumn++) {
+                        Cell cell = sheet.getCell(sheetColumn, sheetRow);
+                        String content = cell.getContents();
+                        columns.add(content == null ? StringUtil.EMPTY : content.trim());
+                    }
+                    if (!CollectionUtil.isEmpty(columns)) {
+                        rows.add(columns);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error(MessageUtil.format("readExcel error", e));
+        } finally {
+            if (workbook != null) {
+                workbook.close();
+            }
+        }
+
+        return rows;
     }
 }
