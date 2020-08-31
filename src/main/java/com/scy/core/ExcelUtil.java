@@ -20,6 +20,9 @@ import java.util.List;
 @Slf4j
 public class ExcelUtil {
 
+    private ExcelUtil() {
+    }
+
     public static void createExcel(
             OutputStream out,
             String sheetName,
