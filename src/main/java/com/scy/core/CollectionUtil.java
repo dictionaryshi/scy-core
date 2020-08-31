@@ -136,4 +136,16 @@ public class CollectionUtil {
         });
         return result.substring(0, result.length() - 1);
     }
+
+    public static <T> List<T> unmodifiableList(List<? extends T> list) {
+        return Collections.unmodifiableList(list);
+    }
+
+    public static <T> Set<T> unmodifiableSet(Set<? extends T> set) {
+        return Collections.unmodifiableSet(set);
+    }
+
+    public static <K, V> Map<K, V> unmodifiableMap(Map<? extends K, ? extends V> map) {
+        return Collections.unmodifiableMap(map);
+    }
 }
