@@ -15,11 +15,11 @@ public class RandomUtil {
     private RandomUtil() {
     }
 
-    public static final List<Character> RANDOM_CHARS = CollectionUtil.newArrayList(
+    public static final List<Character> RANDOM_CHARS = CollectionUtil.unmodifiableList(CollectionUtil.newArrayList(
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-    );
+    ));
 
     public static int nextInt(int startInclusive, int endExclusive) {
         return RandomUtils.nextInt(startInclusive, endExclusive);
