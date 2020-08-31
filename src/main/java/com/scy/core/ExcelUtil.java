@@ -106,4 +106,29 @@ public class ExcelUtil {
 
         return rows;
     }
+
+    public static String table(
+            List<String> heads,
+            List<List<?>> rows
+    ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<table border='1' cellpadding='5' cellspacing='0'>");
+
+        sb.append("<tr style='background-color:gray'>");
+        for (String head : heads) {
+            sb.append("<th>").append(head).append("</th>");
+        }
+        sb.append("</tr>");
+
+        for (List<?> rowColumns : rows) {
+            sb.append("<tr>");
+            for (Object rowColumn : rowColumns) {
+                sb.append("<td>").append(ObjectUtil.obj2Str(rowColumn)).append("</td>");
+            }
+            sb.append("</tr>");
+        }
+
+        sb.append("</table>");
+        return sb.toString();
+    }
 }
