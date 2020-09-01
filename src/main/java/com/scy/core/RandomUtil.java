@@ -3,6 +3,7 @@ package com.scy.core;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * RandomUtil
@@ -14,6 +15,8 @@ public class RandomUtil {
 
     private RandomUtil() {
     }
+
+    public static final Random RANDOM = new Random();
 
     public static final List<Character> RANDOM_CHARS = CollectionUtil.unmodifiableList(CollectionUtil.newArrayList(
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
