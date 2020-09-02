@@ -3,6 +3,7 @@ package com.scy.core.json;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.scy.core.ObjectUtil;
 import com.scy.core.StringUtil;
 import com.scy.core.SystemUtil;
@@ -10,6 +11,9 @@ import com.scy.core.format.DateUtil;
 import com.scy.core.format.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
@@ -110,6 +114,10 @@ public class JsonUtil {
         }
     }
 
+    public static <T> T json2Object(String json, Method method) {
+        return json2Object(json, getJavaType(method.getGenericReturnType()));
+    }
+
     private static <T> T json2Object(String json, JavaType javaType) {
         if (StringUtil.isEmpty(json)) {
             return null;
@@ -120,6 +128,25 @@ public class JsonUtil {
         } catch (Exception e) {
             log.error(MessageUtil.format("json2Object error", e, "json", json));
             return null;
+        }
+    }
+
+    private static JavaType getJavaType(Type type) {
+        if (type instanceof ParameterizedType) {
+            // 泛型
+            Class<?> rawType = (Class<?>) ((ParameterizedType) type).getRawType();
+            Type[] actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
+
+            JavaType[] javaTypes = new JavaType[actualTypeArguments.length];
+            for (int i = 0; i < actualTypeArguments.length; i++) {
+                // 泛型也可能带有泛型, 递归获取
+                javaTypes[i] = getJavaType(actualTypeArguments[i]);
+            }
+            return TypeFactory.defaultInstance().constructParametricType(rawType, javaTypes);
+        } else {
+            // 简单类型
+            Class<?> rawType = (Class<?>) type;
+            return TypeFactory.defaultInstance().constructParametricType(rawType, new JavaType[]{});
         }
     }
 }
