@@ -2,8 +2,10 @@ package com.scy.core.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.scy.core.ObjectUtil;
 import com.scy.core.StringUtil;
 import com.scy.core.SystemUtil;
 import com.scy.core.format.DateUtil;
@@ -73,5 +75,27 @@ public class JsonUtil {
             log.error(MessageUtil.format("object2Json error", e, "object", object.toString()));
             return StringUtil.EMPTY;
         }
+    }
+
+    /**
+     * 尽量使用其as API(带默认值)
+     */
+    public static JsonNode json2JsonNode(String json) {
+        if (StringUtil.isEmpty(json)) {
+            return null;
+        }
+        try {
+            return READ_MAPPER.readTree(json);
+        } catch (Exception e) {
+            log.error(MessageUtil.format("json2JsonNode error", e, "json", json));
+            return null;
+        }
+    }
+
+    public static boolean isEmpty(JsonNode jsonNode) {
+        if (ObjectUtil.isNull(jsonNode)) {
+            return Boolean.TRUE;
+        }
+        return jsonNode.isEmpty();
     }
 }
