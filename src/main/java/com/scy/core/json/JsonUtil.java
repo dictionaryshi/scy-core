@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.scy.core.StringUtil;
 import com.scy.core.SystemUtil;
 import com.scy.core.format.DateUtil;
+import com.scy.core.format.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.SimpleDateFormat;
@@ -69,6 +70,7 @@ public class JsonUtil {
         try {
             return WRITE_MAPPER.writeValueAsString(object);
         } catch (Exception e) {
+            log.error(MessageUtil.format("object2Json error", e, "object", object.toString()));
             return StringUtil.EMPTY;
         }
     }
