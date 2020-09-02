@@ -114,16 +114,17 @@ public class MessageUtil {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(message).append(StringUtil.SPACE).append(StringUtil.SPACE);
+        sb.append(message).append(StringUtil.SPACE);
 
         if (!params.isEmpty()) {
             params.forEach((key, valueObject) -> {
                 String value = ObjectUtil.obj2Str(valueObject);
                 sb.append(key).append(StringUtil.ARROW).append(StringUtil.replaceCrLf(value, StringUtil.SPACE)).append(StringUtil.COMMA).append(StringUtil.SPACE);
             });
+            sb.deleteCharAt(sb.length() - 2);
+        } else {
+            sb.deleteCharAt(sb.length() - 1);
         }
-
-        sb.deleteCharAt(sb.length() - 2);
 
         if (!Objects.isNull(throwable)) {
             sb.append(SystemUtil.SYSTEM_LINE_BREAK).append(ExceptionUtil.getExceptionMessageWithTraceId(throwable));
