@@ -153,7 +153,6 @@ public class CollectionUtil {
         return Collections.synchronizedList(list);
     }
 
-
     public static <T> Set<T> synchronizedSet(Set<T> set) {
         return Collections.synchronizedSet(set);
     }
