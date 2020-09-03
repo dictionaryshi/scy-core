@@ -21,6 +21,9 @@ public class RegexUtil {
     public static final String CELL_PHONE = "(\\d{3})\\d{4}(\\d{4})";
 
     public static String hideCellPhone(String cellPhone) {
+        if (StringUtil.isEmpty(cellPhone)) {
+            return StringUtil.EMPTY;
+        }
         return cellPhone.replaceAll(CELL_PHONE, "$1****$2");
     }
 
