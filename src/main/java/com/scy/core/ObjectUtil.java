@@ -1,11 +1,16 @@
 package com.scy.core;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.scy.core.enums.ResponseCodeEnum;
 import com.scy.core.exception.BusinessException;
 import com.scy.core.format.DateUtil;
+import com.scy.core.format.MessageUtil;
 import com.scy.core.json.JsonUtil;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -14,6 +19,7 @@ import java.util.Objects;
  * @author shichunyang
  * Created by shichunyang on 2020/8/19.
  */
+@Slf4j
 public class ObjectUtil {
 
     private ObjectUtil() {
@@ -48,5 +54,108 @@ public class ObjectUtil {
 
     public static boolean equals(Object a, Object b) {
         return Objects.equals(a, b);
+    }
+
+    public static boolean isEmpty(Object obj) {
+        if (obj == null) {
+            return Boolean.TRUE;
+        }
+
+        if (obj instanceof String) {
+            return StringUtil.isEmpty((String) obj);
+        }
+
+        if (obj instanceof Collection) {
+            return ((Collection<?>) obj).isEmpty();
+        }
+
+        if (obj instanceof Map) {
+            return ((Map<?, ?>) obj).isEmpty();
+        }
+
+        if (obj.getClass().isArray()) {
+            return ArrayUtil.isEmpty(obj);
+        }
+
+        if (obj instanceof JsonNode) {
+            return JsonUtil.isEmpty((JsonNode) obj);
+        }
+
+        return Boolean.FALSE;
+    }
+
+    public static Integer obj2Int(Object object) {
+        if (object == null) {
+            return null;
+        }
+
+        if (object instanceof Number) {
+            return ((Number) object).intValue();
+        }
+
+        if (object instanceof String) {
+            String numberStr = (String) object;
+            if (StringUtil.isEmpty(numberStr)) {
+                return null;
+            }
+            try {
+                return Integer.parseInt(numberStr);
+            } catch (Exception e) {
+                log.error(MessageUtil.format("obj2Int error", e, "object", object));
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public static Double obj2Double(Object object) {
+        if (object == null) {
+            return null;
+        }
+
+        if (object instanceof Number) {
+            return ((Number) object).doubleValue();
+        }
+
+        if (object instanceof String) {
+            String numberStr = (String) object;
+            if (StringUtil.isEmpty(numberStr)) {
+                return null;
+            }
+            try {
+                return Double.parseDouble(numberStr);
+            } catch (Exception e) {
+                log.error(MessageUtil.format("obj2Double error", e, "object", object));
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public static Long obj2Long(Object object) {
+        if (object == null) {
+            return null;
+        }
+
+        if (object instanceof Number) {
+            return ((Number) object).longValue();
+        }
+
+        if (object instanceof String) {
+            String numberStr = (String) object;
+            if (StringUtil.isEmpty(numberStr)) {
+                return null;
+            }
+            try {
+                return Long.parseLong(numberStr);
+            } catch (Exception e) {
+                log.error(MessageUtil.format("obj2Long error", e, "object", object));
+                return null;
+            }
+        }
+
+        return null;
     }
 }
