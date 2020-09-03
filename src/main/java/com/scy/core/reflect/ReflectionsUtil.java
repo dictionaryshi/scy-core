@@ -53,11 +53,11 @@ public class ReflectionsUtil {
         }
     }
 
-    public Set<Class<?>> getTypesAnnotatedWith(final Class<? extends Annotation> annotation) {
+    public static Set<Class<?>> getTypesAnnotatedWith(final Class<? extends Annotation> annotation) {
         return classReflections.getTypesAnnotatedWith(annotation);
     }
 
-    public Set<Field> getFieldsAnnotatedWith(final Class<? extends Annotation> annotation) {
+    public static Set<Field> getFieldsAnnotatedWith(final Class<? extends Annotation> annotation) {
         return fieldReflections.getFieldsAnnotatedWith(annotation);
     }
 
