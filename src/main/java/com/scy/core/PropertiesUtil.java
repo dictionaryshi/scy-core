@@ -22,7 +22,7 @@ public class PropertiesUtil {
         try {
             return PropertiesLoaderUtils.loadAllProperties(source);
         } catch (Throwable e) {
-            log.error(MessageUtil.format("loadAllProperties error", "source", source));
+            log.error(MessageUtil.format("loadAllProperties error", e, "source", source));
             return null;
         }
     }
