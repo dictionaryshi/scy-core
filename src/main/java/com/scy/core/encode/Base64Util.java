@@ -13,8 +13,16 @@ public class Base64Util {
     private Base64Util() {
     }
 
+    public static String encodeBase64String(byte[] binaryData) {
+        return Base64.encodeBase64String(binaryData);
+    }
+
     public static String base64Encode(String str) {
         return Base64.encodeBase64String(str.getBytes());
+    }
+
+    public static byte[] decodeBase64(String base64String) {
+        return Base64.decodeBase64(base64String);
     }
 
     public static String base64Decode(String str) {
