@@ -60,13 +60,13 @@ public class NumberUtil {
 
     public static BigDecimal multiply(Number multiply, Number... numbers) {
         multiply = null2Zero(multiply);
-        if (ObjectUtil.equals(ZERO.toString(), multiply.toString())) {
+        if (ObjectUtil.equals(ZERO.doubleValue(), multiply.doubleValue())) {
             return new BigDecimal(ZERO.toString());
         }
         BigDecimal result = new BigDecimal(multiply.toString());
         for (Number number : numbers) {
             number = null2Zero(number);
-            if (ObjectUtil.equals(ZERO.toString(), number.toString())) {
+            if (ObjectUtil.equals(ZERO.doubleValue(), number.doubleValue())) {
                 return new BigDecimal(ZERO.toString());
             }
             result = result.multiply(new BigDecimal(number.toString()));
@@ -76,13 +76,13 @@ public class NumberUtil {
 
     public static BigDecimal divide(Number divide, int decimals, Number... numbers) {
         divide = null2Zero(divide);
-        if (ObjectUtil.equals(ZERO.toString(), divide.toString())) {
+        if (ObjectUtil.equals(ZERO.doubleValue(), divide.doubleValue())) {
             return new BigDecimal(ZERO.toString());
         }
         BigDecimal result = new BigDecimal(divide.toString());
         for (Number number : numbers) {
             number = null2Zero(number);
-            if (ObjectUtil.equals(ZERO.toString(), number.toString())) {
+            if (ObjectUtil.equals(ZERO.doubleValue(), number.doubleValue())) {
                 return new BigDecimal(ZERO.toString());
             }
             result = result.divide(new BigDecimal(number.toString()), decimals, BigDecimal.ROUND_HALF_UP);
