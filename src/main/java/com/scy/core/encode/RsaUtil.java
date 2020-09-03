@@ -1,7 +1,6 @@
 package com.scy.core.encode;
 
 import com.scy.core.model.RsaKeyBO;
-import org.apache.commons.codec.binary.Base64;
 
 import java.security.*;
 
@@ -43,10 +42,10 @@ public class RsaUtil {
         rsaKeyBO.setLength(length);
 
         PublicKey publicKey = keyPair.getPublic();
-        rsaKeyBO.setPublicKey(Base64.encodeBase64String(publicKey.getEncoded()));
+        rsaKeyBO.setPublicKey(Base64Util.encodeBase64String(publicKey.getEncoded()));
 
         PrivateKey privateKey = keyPair.getPrivate();
-        rsaKeyBO.setPrivateKey(Base64.encodeBase64String(privateKey.getEncoded()));
+        rsaKeyBO.setPrivateKey(Base64Util.encodeBase64String(privateKey.getEncoded()));
         return rsaKeyBO;
     }
 }
