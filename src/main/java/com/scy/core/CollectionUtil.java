@@ -148,17 +148,4 @@ public class CollectionUtil {
     public static <K, V> Map<K, V> unmodifiableMap(Map<? extends K, ? extends V> map) {
         return Collections.unmodifiableMap(map);
     }
-
-    public static <T> List<T> synchronizedList(List<T> list) {
-        return Collections.synchronizedList(list);
-    }
-
-
-    public static <T> Set<T> synchronizedSet(Set<T> set) {
-        return Collections.synchronizedSet(set);
-    }
-
-    public static <K, V> Map<K, V> synchronizedMap(Map<K, V> map) {
-        return Collections.synchronizedMap(map);
-    }
 }
