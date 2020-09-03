@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * RsaKeyDO
+ * RsaKeyBO
  *
  * @author shichunyang
  * Created by shichunyang on 2020/9/3.
@@ -13,7 +13,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RsaKeyDO {
+public class RsaKeyBO {
 
     private int length;
 
