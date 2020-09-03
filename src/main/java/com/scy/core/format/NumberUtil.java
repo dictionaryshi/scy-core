@@ -3,6 +3,7 @@ package com.scy.core.format;
 import com.scy.core.ObjectUtil;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * NumberUtil
@@ -88,6 +89,24 @@ public class NumberUtil {
             result = result.divide(new BigDecimal(number.toString()), decimals, BigDecimal.ROUND_HALF_UP);
         }
         return result;
+    }
+
+    public static BigInteger[] divideAndRemainder(Number divide, Number number) {
+        divide = null2Zero(divide);
+        number = null2Zero(number);
+        if (ObjectUtil.equals(ZERO.doubleValue(), divide.doubleValue())) {
+            return new BigInteger[]{new BigInteger(ZERO.toString()), new BigInteger(ZERO.toString())};
+        }
+        if (ObjectUtil.equals(ZERO.doubleValue(), number.doubleValue())) {
+            return new BigInteger[]{new BigInteger(ZERO.toString()), new BigInteger(ZERO.toString())};
+        }
+        return new BigInteger(divide.toString()).divideAndRemainder(new BigInteger(number.toString()));
+    }
+
+    public static String percentage(Number divide, Number number, int decimals, int percentage) {
+        BigDecimal divideResult = divide(divide, decimals, number);
+        BigDecimal multiplyResult = multiply(divideResult, 100);
+        return divide(multiplyResult, percentage, 1).toString() + "%";
     }
 
     public static Number null2Zero(Number number) {
