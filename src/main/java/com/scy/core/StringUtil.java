@@ -47,7 +47,7 @@ public class StringUtil {
 
     private static final Pattern LINE_TO_HUMP_PATTERN = Pattern.compile("(_)([a-z])");
 
-    private static final Pattern SPRING_VALUE = Pattern.compile("\\$\\{(.+)}");
+    private static final Pattern SPRING_VALUE = Pattern.compile("\\$\\{(.*)}");
 
     public static boolean isEmpty(String str) {
         return str == null || str.trim().isEmpty() || str.trim().toLowerCase().equals(NULL);
