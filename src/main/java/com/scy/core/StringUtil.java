@@ -29,6 +29,8 @@ public class StringUtil {
 
     public static final String ARROW = "=>";
 
+    public static final String POINT = ".";
+
     public static final String CR = StringUtils.CR;
     public static final String LF = StringUtils.LF;
     public static final String CRLF = CR + LF;
@@ -44,6 +46,8 @@ public class StringUtil {
     public static final Pattern NUMBER_PATTERN = Pattern.compile(NUMBER_REGEX);
 
     private static final Pattern LINE_TO_HUMP_PATTERN = Pattern.compile("(_)([a-z])");
+
+    private static final Pattern SPRING_VALUE = Pattern.compile("\\$\\{(.+)}");
 
     public static boolean isEmpty(String str) {
         return str == null || str.trim().isEmpty() || str.trim().toLowerCase().equals(NULL);
@@ -122,5 +126,19 @@ public class StringUtil {
             return StringUtil.EMPTY;
         }
         return str.replaceAll(CR_LF_REGEX, replacement);
+    }
+
+    public static String parseValue(String value) {
+        if (StringUtil.isEmpty(value)) {
+            return StringUtil.EMPTY;
+        }
+
+        Matcher matcher = SPRING_VALUE.matcher(value);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, matcher.group(1).trim());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 }
