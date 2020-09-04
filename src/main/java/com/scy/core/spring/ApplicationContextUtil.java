@@ -1,6 +1,7 @@
 package com.scy.core.spring;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.AbstractEnvironment;
 
 /**
  * ApplicationContextUtil
@@ -12,6 +13,16 @@ public class ApplicationContextUtil {
 
     private ApplicationContextUtil() {
     }
+
+    public static final String SPRING = "spring";
+
+    public static final String APPLICATION_NAME = "spring.application.name";
+
+    public static final String ACTIVE = AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME;
+
+    public static final String ENV_DEV = "dev";
+
+    public static final String ENV_STAG = "stag";
 
     private volatile static ApplicationContext applicationContext;
 
