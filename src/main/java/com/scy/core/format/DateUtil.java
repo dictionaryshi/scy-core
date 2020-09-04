@@ -42,8 +42,20 @@ public class DateUtil {
     public static final String PATTERN_GMT = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
     public static final String GMT = "GMT";
 
+    public static final long SECOND = 1000L;
+
+    public static final long MINUTE = 60 * SECOND;
+
+    public static final long HOUR = 60 * MINUTE;
+
+    public static final long DAY = 24 * HOUR;
+
     public static int millisecond2Second(long millisecond) {
-        return (int) (millisecond / 1000);
+        return (int) (millisecond / SECOND);
+    }
+
+    public static double millisecond2Minute(long millisecond) {
+        return NumberUtil.divide(millisecond, 1, MINUTE).doubleValue();
     }
 
     public static Date getCurrentDate() {
