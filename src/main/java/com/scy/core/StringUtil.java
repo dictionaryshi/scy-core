@@ -128,7 +128,7 @@ public class StringUtil {
         return str.replaceAll(CR_LF_REGEX, replacement);
     }
 
-    public static String parseValue(String value) {
+    public static String parseSpringValue(String value) {
         if (StringUtil.isEmpty(value)) {
             return StringUtil.EMPTY;
         }
