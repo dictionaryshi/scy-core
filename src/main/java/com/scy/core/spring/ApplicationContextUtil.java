@@ -1,7 +1,10 @@
 package com.scy.core.spring;
 
+import com.scy.core.format.DateUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.AbstractEnvironment;
+
+import java.util.Date;
 
 /**
  * ApplicationContextUtil
@@ -38,5 +41,13 @@ public class ApplicationContextUtil {
                 }
             }
         }
+    }
+
+    public static String getApplicationName() {
+        return applicationContext.getId();
+    }
+
+    public static String getStartupDate() {
+        return DateUtil.date2Str(new Date(applicationContext.getStartupDate()), DateUtil.PATTERN_SECOND);
     }
 }
