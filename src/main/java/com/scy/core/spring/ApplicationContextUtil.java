@@ -1,6 +1,7 @@
 package com.scy.core.spring;
 
 import com.scy.core.format.DateUtil;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.AbstractEnvironment;
 
@@ -60,5 +61,17 @@ public class ApplicationContextUtil {
 
     public static String getProperty(String key) {
         return applicationContext.getEnvironment().getProperty(key);
+    }
+
+    public static <T> T getBean(String name, Class<T> requiredType) throws BeansException {
+        return applicationContext.getBean(name, requiredType);
+    }
+
+    public static <T> T getBean(Class<T> requiredType) throws BeansException {
+        return applicationContext.getBean(requiredType);
+    }
+
+    public static boolean containsBean(String name) {
+        return applicationContext.containsBean(name);
     }
 }
