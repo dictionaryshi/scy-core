@@ -57,4 +57,8 @@ public class ApplicationContextUtil {
     public static List<String> getActiveProfiles() {
         return Stream.of(applicationContext.getEnvironment().getActiveProfiles()).collect(Collectors.toList());
     }
+
+    public static String getProperty(String key) {
+        return applicationContext.getEnvironment().getProperty(key);
+    }
 }
