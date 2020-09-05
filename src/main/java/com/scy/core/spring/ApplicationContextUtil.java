@@ -5,6 +5,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.AbstractEnvironment;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * ApplicationContextUtil
@@ -49,5 +52,9 @@ public class ApplicationContextUtil {
 
     public static String getStartupDate() {
         return DateUtil.date2Str(new Date(applicationContext.getStartupDate()), DateUtil.PATTERN_SECOND);
+    }
+
+    public static List<String> getActiveProfiles() {
+        return Stream.of(applicationContext.getEnvironment().getActiveProfiles()).collect(Collectors.toList());
     }
 }
