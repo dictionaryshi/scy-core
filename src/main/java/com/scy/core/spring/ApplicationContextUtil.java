@@ -2,11 +2,15 @@ package com.scy.core.spring;
 
 import com.scy.core.format.DateUtil;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.lang.Nullable;
 
+import java.lang.annotation.Annotation;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -73,5 +77,34 @@ public class ApplicationContextUtil {
 
     public static boolean containsBean(String name) {
         return applicationContext.containsBean(name);
+    }
+
+    public static boolean containsBeanDefinition(String beanName) {
+        return applicationContext.containsBeanDefinition(beanName);
+    }
+
+    public static String[] getBeanDefinitionNames() {
+        return applicationContext.getBeanDefinitionNames();
+    }
+
+    public static String[] getBeanNamesForType(@Nullable Class<?> type) {
+        return applicationContext.getBeanNamesForType(type);
+    }
+
+    public static <T> Map<String, T> getBeansOfType(@Nullable Class<T> type) throws BeansException {
+        return applicationContext.getBeansOfType(type);
+    }
+
+    public static String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType) {
+        return applicationContext.getBeanNamesForAnnotation(annotationType);
+    }
+
+    public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) throws BeansException {
+        return applicationContext.getBeansWithAnnotation(annotationType);
+    }
+
+    @Nullable
+    public static <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType) throws NoSuchBeanDefinitionException {
+        return applicationContext.findAnnotationOnBean(beanName, annotationType);
     }
 }
