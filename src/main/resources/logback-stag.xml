@@ -8,6 +8,9 @@
 
     <contextName>${appkey}</contextName>
 
+    <appender name="logAppender" class="com.scy.core.log.LogAppender"/>
+
     <root level="info">
+        <appender-ref ref="logAppender"/>
     </root>
 </configuration>
