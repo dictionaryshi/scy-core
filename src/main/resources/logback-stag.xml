@@ -10,7 +10,45 @@
 
     <appender name="logAppender" class="com.scy.core.log.LogAppender"/>
 
+    <appender name="error_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>
+                ${log_pattern}
+            </pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log_home}/error-${appkey}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>512MB</maxFileSize>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="all_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>
+                ${log_pattern}
+            </pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log_home}/${appkey}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>512MB</maxFileSize>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
     <root level="info">
         <appender-ref ref="logAppender"/>
+        <appender-ref ref="error_log"/>
+        <appender-ref ref="all_log"/>
     </root>
 </configuration>
