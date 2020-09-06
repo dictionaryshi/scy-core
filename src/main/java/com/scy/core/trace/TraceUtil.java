@@ -66,4 +66,8 @@ public class TraceUtil {
     public static void clearMdc() {
         MDC.clear();
     }
+
+    public static void putMdc(String key, String val) {
+        MDC.put(key, val);
+    }
 }
