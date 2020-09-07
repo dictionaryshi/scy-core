@@ -55,7 +55,7 @@ public class TraceUtil {
     public static void setMdcTraceId() {
         String traceId = getTraceId();
         if (StringUtil.isEmpty(traceId)) {
-            traceId = UUIDUtil.uuid();
+            return;
         }
         MDC.put(TRACE_ID, traceId);
     }
