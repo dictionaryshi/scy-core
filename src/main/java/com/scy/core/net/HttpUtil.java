@@ -5,6 +5,7 @@ import com.scy.core.IOUtil;
 import com.scy.core.ObjectUtil;
 import com.scy.core.StringUtil;
 import com.scy.core.format.MessageUtil;
+import com.scy.core.json.JsonUtil;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -142,5 +143,54 @@ public class HttpUtil {
                     "result", result, "responseHeaders", responseHeaders, StringUtil.COST, (endTime - httpParam.getStartTime())));
         }
         return result;
+    }
+
+    public static String get(String requestUrl, Map<String, Object> params, HttpOptions httpOptions) {
+        String requestParam = StringUtil.EMPTY;
+        if (!CollectionUtil.isEmpty(params)) {
+            requestParam = StringUtil.QUESTION + CollectionUtil.map2Str(params, Boolean.TRUE);
+        }
+        HttpParam httpParam = new HttpParam();
+        httpParam.setRequestUrl(requestUrl + requestParam);
+        httpParam.setRequestMethod(GET);
+        httpParam.setRequestBody(null);
+        httpParam.setHttpOptions(httpOptions);
+        String result = HttpUtil.httpRequest(httpParam);
+        if (httpOptions.getRetry() <= 0) {
+            return result;
+        }
+        if (!StringUtil.isEmpty(result)) {
+            return result;
+        }
+        return HttpUtil.httpRequest(httpParam);
+    }
+
+    public static String post(String requestUrl, Map<String, Object> params, HttpOptions options) {
+        return request(requestUrl, POST, params, options);
+    }
+
+    public static String put(String requestUrl, Map<String, Object> params, HttpOptions options) {
+        return request(requestUrl, PUT, params, options);
+    }
+
+    public static String delete(String requestUrl, Map<String, Object> params, HttpOptions options) {
+        return request(requestUrl, DELETE, params, options);
+    }
+
+    private static String request(String requestUrl, String requestMethod, Map<String, Object> params, HttpOptions httpOptions) {
+        HttpParam httpParam = new HttpParam();
+        httpParam.setRequestUrl(requestUrl);
+        httpParam.setRequestMethod(requestMethod);
+        String requestBody = null;
+        if (!CollectionUtil.isEmpty(params)) {
+            if (ObjectUtil.equals(httpOptions.getContentType(), APPLICATION_FORM_URLENCODED_VALUE)) {
+                requestBody = CollectionUtil.map2Str(params, Boolean.TRUE);
+            } else {
+                requestBody = JsonUtil.object2Json(params);
+            }
+        }
+        httpParam.setRequestBody(requestBody);
+        httpParam.setHttpOptions(httpOptions);
+        return HttpUtil.httpRequest(httpParam);
     }
 }
