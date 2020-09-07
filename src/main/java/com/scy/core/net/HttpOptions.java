@@ -18,6 +18,9 @@ import java.util.Map;
 @ToString
 public class HttpOptions {
 
+    private HttpOptions() {
+    }
+
     private int connectTimeout = HttpUtil.CONNECT_TIMEOUT;
 
     private int readTimeout = HttpUtil.READ_TIMEOUT;
