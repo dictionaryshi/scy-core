@@ -3,10 +3,12 @@ package com.scy.core.net;
 import com.scy.core.CollectionUtil;
 import com.scy.core.ObjectUtil;
 import com.scy.core.StringUtil;
+import com.scy.core.format.MessageUtil;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -77,5 +79,47 @@ public class HttpUtil {
         }
 
         return httpUrlConnection;
+    }
+
+    public static String httpRequest(HttpParam httpParam) {
+        HttpURLConnection httpUrlConnection = null;
+
+        OutputStream outputStream = null;
+
+        try {
+            // 获取连接对象
+            httpUrlConnection = getHttpUrlConnection(httpParam);
+
+            httpParam.setStartTime(System.currentTimeMillis());
+
+            // 发起连接
+            httpUrlConnection.connect();
+
+            if (!StringUtil.isEmpty(httpParam.getRequestBody())) {
+                // 发送数据
+                outputStream = httpUrlConnection.getOutputStream();
+                outputStream.write(httpParam.getRequestBody().getBytes());
+                outputStream.flush();
+            }
+
+            httpParam.setHttpUrlConnection(httpUrlConnection);
+
+        } catch (Throwable e) {
+            log.error(MessageUtil.format("httpRequest error", e, "requestUrl", httpParam.getRequestUrl(), "requestBody", httpParam.getRequestBody()));
+            return StringUtil.EMPTY;
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (Throwable e) {
+                    log.error(MessageUtil.format("httpRequest outputStream close error", e, "requestUrl", httpParam.getRequestUrl(), "requestBody", httpParam.getRequestBody()));
+                }
+            }
+
+            if (httpUrlConnection != null) {
+                // 释放连接
+                httpUrlConnection.disconnect();
+            }
+        }
     }
 }
