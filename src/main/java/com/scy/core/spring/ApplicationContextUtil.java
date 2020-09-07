@@ -1,5 +1,7 @@
 package com.scy.core.spring;
 
+import com.scy.core.ObjectUtil;
+import com.scy.core.StringUtil;
 import com.scy.core.format.DateUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -52,6 +54,9 @@ public class ApplicationContextUtil {
     }
 
     public static String getApplicationName() {
+        if (ObjectUtil.isNull(applicationContext)) {
+            return StringUtil.EMPTY;
+        }
         return applicationContext.getId();
     }
 
