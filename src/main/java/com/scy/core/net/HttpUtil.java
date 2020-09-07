@@ -1,6 +1,14 @@
 package com.scy.core.net;
 
+import com.scy.core.CollectionUtil;
+import com.scy.core.ObjectUtil;
+import com.scy.core.StringUtil;
+import com.scy.core.spring.ApplicationContextUtil;
+import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * HttpUtil
@@ -41,4 +49,33 @@ public class HttpUtil {
     public static final String CONTENT_TYPE = "Content-Type";
 
     public static final String KEEP_ALIVE = "keep-alive";
+
+    private static HttpURLConnection getHttpUrlConnection(HttpParam httpParam) throws Throwable {
+        URL url = new URL(httpParam.getRequestUrl());
+
+        HttpURLConnection httpUrlConnection = (HttpURLConnection) url.openConnection();
+        httpUrlConnection.setRequestMethod(httpParam.getRequestMethod());
+        httpUrlConnection.setConnectTimeout(httpParam.getHttpOptions().getConnectTimeout());
+        httpUrlConnection.setReadTimeout(httpParam.getHttpOptions().getReadTimeout());
+        httpUrlConnection.setDoInput(Boolean.TRUE);
+        httpUrlConnection.setDoOutput(Boolean.TRUE);
+        httpUrlConnection.setUseCaches(Boolean.FALSE);
+        httpUrlConnection.setInstanceFollowRedirects(Boolean.TRUE);
+
+        if (!StringUtil.isEmpty(httpParam.getRequestBody())) {
+            httpUrlConnection.setFixedLengthStreamingMode(httpParam.getRequestBody().getBytes().length);
+        }
+
+        httpUrlConnection.setRequestProperty(TraceUtil.TRACE_ID, TraceUtil.getTraceId());
+        httpUrlConnection.setRequestProperty(USER_AGENT, ApplicationContextUtil.getApplicationName());
+        httpUrlConnection.setRequestProperty(CONNECTION, KEEP_ALIVE);
+        httpUrlConnection.setRequestProperty(ACCEPT, ALL_VALUE);
+        httpUrlConnection.setRequestProperty(CONTENT_TYPE, httpParam.getHttpOptions().getContentType());
+
+        if (!CollectionUtil.isEmpty(httpParam.getHttpOptions().getHeaders())) {
+            httpParam.getHttpOptions().getHeaders().forEach((key, value) -> httpUrlConnection.setRequestProperty(key, ObjectUtil.obj2Str(value)));
+        }
+
+        return httpUrlConnection;
+    }
 }
