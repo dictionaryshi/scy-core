@@ -1,6 +1,7 @@
 package com.scy.core.net;
 
 import com.scy.core.CollectionUtil;
+import com.scy.core.IOUtil;
 import com.scy.core.ObjectUtil;
 import com.scy.core.StringUtil;
 import com.scy.core.format.MessageUtil;
@@ -8,9 +9,13 @@ import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * HttpUtil
@@ -104,6 +109,7 @@ public class HttpUtil {
 
             httpParam.setHttpUrlConnection(httpUrlConnection);
 
+            return parseHttpResult(httpParam);
         } catch (Throwable e) {
             log.error(MessageUtil.format("httpRequest error", e, "requestUrl", httpParam.getRequestUrl(), "requestBody", httpParam.getRequestBody()));
             return StringUtil.EMPTY;
@@ -121,5 +127,20 @@ public class HttpUtil {
                 httpUrlConnection.disconnect();
             }
         }
+    }
+
+    private static String parseHttpResult(HttpParam httpParam) throws Throwable {
+        String result;
+        int responseCode = httpParam.getHttpUrlConnection().getResponseCode();
+        try (InputStream inputStream = httpParam.getHttpUrlConnection().getInputStream()) {
+            Map<String, List<String>> responseHeaders = new HashMap<>(httpParam.getHttpUrlConnection().getHeaderFields());
+            responseHeaders.remove(null);
+            result = new String(IOUtil.toByteArray(inputStream), httpParam.getHttpOptions().getResponseCharset());
+            long endTime = System.currentTimeMillis();
+            log.info(MessageUtil.format("parseHttpResult",
+                    "requestUrl", httpParam.getRequestUrl(), "requestBody", httpParam.getRequestBody(), "responseCode", responseCode,
+                    "result", result, "responseHeaders", responseHeaders, StringUtil.COST, (endTime - httpParam.getStartTime())));
+        }
+        return result;
     }
 }
