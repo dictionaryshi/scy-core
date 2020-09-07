@@ -29,4 +29,16 @@ public class HttpUtil {
     public static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
 
     public static final String APPLICATION_JSON_VALUE = "application/json";
+
+    public static final String USER_AGENT = "User-Agent";
+
+    public static final String CONNECTION = "Connection";
+
+    public static final String ACCEPT = "Accept";
+
+    public static final String ALL_VALUE = "*/*";
+
+    public static final String CONTENT_TYPE = "Content-Type";
+
+    public static final String KEEP_ALIVE = "keep-alive";
 }
