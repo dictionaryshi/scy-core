@@ -10,9 +10,12 @@ import java.util.stream.Stream;
  * SqlUtil
  *
  * @author shichunyang
- * Created by shichunyang on 2020/9/7.
+ * Created by shichunyang on 2020/9/8.
  */
 public class SqlUtil {
+
+    private SqlUtil() {
+    }
 
     public static <T> String batchInsert(Class<T> clazz, String table) {
         StringBuilder sb = new StringBuilder();
