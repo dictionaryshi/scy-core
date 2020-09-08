@@ -60,4 +60,18 @@ public class SqlUtil {
         sb.append("</script>").append(SystemUtil.SYSTEM_LINE_BREAK);
         return sb.toString();
     }
+
+    public static String selectByIn(String table, String field) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<script>").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("select * from ").append(table).append(StringUtil.SPACE).append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("<where>").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append(field).append(StringUtil.SPACE).append("in ").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("<foreach close=\")\" collection=\"list\" item=\"entry\" open=\"(\" separator=\",\">").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("#{entry}").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("</foreach>").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("</where>").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("</script>");
+        return sb.toString();
+    }
 }
