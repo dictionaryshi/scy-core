@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
+
+        <plugin type="com.scy.core.generator.Plugin"/>
+
+        <!-- 打开注释 -->
+        <commentGenerator type="com.scy.core.generator.CommentGenerator">
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+
+        <!-- 数据库链接URL、用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/stock"
+                        userId="root"
+                        password=""
+        />
+
+        <javaTypeResolver type="com.scy.core.generator.JavaTypeResolver">
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- 生成实体类的位置 -->
+        <javaModelGenerator
+                targetPackage="com.scy.core.generator.model"
+                targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成Mapper类的位置 -->
+        <javaClientGenerator type="ANNOTATEDMAPPER"
+                             targetPackage="com.scy.core.generator.mapper"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 数据库名和表名的配置 -->
+        <table schema="stock" tableName="order_goods"
+               domainObjectName="OrderGoodsDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               enableUpdateByExample="false" selectByExampleQueryId="false">
+            <!-- 生成的javaBean的属性按照驼峰命名 -->
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql" identity="true"/>
+            <columnOverride column="phone" property="cellPhone"/>
+            <ignoreColumn column="created_at"/>
+        </table>
+
+    </context>
+</generatorConfiguration>
