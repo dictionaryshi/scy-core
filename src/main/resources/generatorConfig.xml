@@ -41,10 +41,10 @@
         </javaClientGenerator>
 
         <!-- 数据库名和表名的配置 -->
-        <table schema="stock" tableName="order_goods"
-               domainObjectName="OrderGoodsDO" enableCountByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="true"
-               enableUpdateByExample="true" selectByExampleQueryId="false">
+        <table schema="stock"
+               tableName="order_goods"
+               domainObjectName="OrderGoodsDO"
+        >
             <!-- 生成的javaBean的属性按照驼峰命名 -->
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="id" sqlStatement="mysql" identity="true"/>
