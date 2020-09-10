@@ -166,10 +166,6 @@ public class Plugin extends PluginAdapter {
         List<IntrospectedColumn> columns = introspectedTable.getAllColumns();
         if (!CollectionUtil.isEmpty(columns)) {
             columns.forEach(column -> {
-                FullyQualifiedJavaType fullyQualifiedJavaType = column.getFullyQualifiedJavaType();
-                if (ObjectUtil.equals(Date.class.getName(), fullyQualifiedJavaType.getFullyQualifiedName())) {
-                    return;
-                }
                 String actualColumnName = column.getActualColumnName();
                 String javaProperty = column.getJavaProperty();
                 String javaPropertyGet = javaProperty.substring(0, 1).toUpperCase() + javaProperty.substring(1);
