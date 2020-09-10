@@ -44,7 +44,7 @@
         <table schema="stock" tableName="order_goods"
                domainObjectName="OrderGoodsDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="true"
-               enableUpdateByExample="false" selectByExampleQueryId="false">
+               enableUpdateByExample="true" selectByExampleQueryId="false">
             <!-- 生成的javaBean的属性按照驼峰命名 -->
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="id" sqlStatement="mysql" identity="true"/>
