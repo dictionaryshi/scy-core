@@ -127,6 +127,8 @@ public class Plugin extends PluginAdapter {
     public boolean providerGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         Set<FullyQualifiedJavaType> importedTypes = topLevelClass.getImportedTypes();
         importedTypes.remove(new ArrayList<>(importedTypes).get(1));
+        importedTypes.remove(new ArrayList<>(importedTypes).get(1));
+        importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param"));
         return Boolean.TRUE;
     }
 
@@ -178,5 +180,75 @@ public class Plugin extends PluginAdapter {
     @Override
     public boolean providerUpdateByPrimaryKeySelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         return Boolean.TRUE;
+    }
+
+    @Override
+    public boolean clientUpdateByExampleSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
+        List<String> annotations = method.getAnnotations();
+        String selectProvider = annotations.get(0);
+        annotations.clear();
+        annotations.add(selectProvider);
+        List<Parameter> parameters = method.getParameters();
+        parameters.clear();
+        parameters.add(new Parameter(new ArrayList<>(interfaze.getImportedTypes()).get(0), "record", "@Param(\"record\")"));
+        parameters.add(new Parameter(new ArrayList<>(interfaze.getImportedTypes()).get(0), "condition", "@Param(\"condition\")"));
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public boolean providerUpdateByExampleSelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        List<Parameter> parameters = method.getParameters();
+        parameters.clear();
+        parameters.add(new Parameter(new ArrayList<>(topLevelClass.getImportedTypes()).get(0), "record", "@Param(\"record\")"));
+        parameters.add(new Parameter(new ArrayList<>(topLevelClass.getImportedTypes()).get(0), "condition", "@Param(\"condition\")"));
+        List<String> bodyLines = method.getBodyLines();
+        bodyLines.clear();
+        bodyLines.add("SQL sql = new SQL();");
+        bodyLines.add("");
+        bodyLines.add("sql.UPDATE(\"" + introspectedTable.getFullyQualifiedTable() + "\");");
+        bodyLines.add("");
+        List<IntrospectedColumn> columns = introspectedTable.getAllColumns();
+        if (!CollectionUtil.isEmpty(columns)) {
+            columns.forEach(column -> {
+                String actualColumnName = column.getActualColumnName();
+                String javaProperty = column.getJavaProperty();
+                String javaPropertyGet = javaProperty.substring(0, 1).toUpperCase() + javaProperty.substring(1);
+                bodyLines.add("if (record.get" + javaPropertyGet + "() != null) {");
+                bodyLines.add("sql.SET(\"" + actualColumnName + " = #{record." + javaProperty + "}\");");
+                bodyLines.add("}");
+                bodyLines.add("");
+            });
+            columns.forEach(column -> {
+                String actualColumnName = column.getActualColumnName();
+                String javaProperty = column.getJavaProperty();
+                String javaPropertyGet = javaProperty.substring(0, 1).toUpperCase() + javaProperty.substring(1);
+                bodyLines.add("if (condition.get" + javaPropertyGet + "() != null) {");
+                bodyLines.add("sql.WHERE(\"" + actualColumnName + " = #{condition." + javaProperty + "}\");");
+                bodyLines.add("}");
+                bodyLines.add("");
+            });
+        }
+        bodyLines.add("return sql.toString();");
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public boolean clientUpdateByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
+        return Boolean.FALSE;
+    }
+
+    @Override
+    public boolean clientUpdateByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
+        return Boolean.FALSE;
+    }
+
+    @Override
+    public boolean providerUpdateByExampleWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return Boolean.FALSE;
+    }
+
+    @Override
+    public boolean providerUpdateByExampleWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return Boolean.FALSE;
     }
 }
