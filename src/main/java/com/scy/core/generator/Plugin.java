@@ -187,6 +187,7 @@ public class Plugin extends PluginAdapter {
         List<String> annotations = method.getAnnotations();
         String selectProvider = annotations.get(0);
         annotations.clear();
+        annotations.add("@Options(useCache = false)");
         annotations.add(selectProvider);
         List<Parameter> parameters = method.getParameters();
         parameters.clear();
