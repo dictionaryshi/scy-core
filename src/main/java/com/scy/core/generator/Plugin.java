@@ -49,10 +49,8 @@ public class Plugin extends PluginAdapter {
         List<String> annotations = method.getAnnotations();
         annotations.clear();
         annotations.add("@Select({");
-        annotations.add("\"select \",");
-        annotations.add("\"* \",");
-        annotations.add("\"from " + introspectedTable.getFullyQualifiedTable() + " \",");
-        annotations.add("\"where id = #{id}\"");
+        annotations.add("\"select * \",");
+        annotations.add("\"from " + introspectedTable.getFullyQualifiedTable() + " where id = #{id}\"");
         annotations.add("})");
         return Boolean.TRUE;
     }
