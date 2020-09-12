@@ -1,17 +1,13 @@
 package com.scy.core.net;
 
-import com.scy.core.CollectionUtil;
-import com.scy.core.IOUtil;
-import com.scy.core.ObjectUtil;
-import com.scy.core.StringUtil;
+import com.scy.core.*;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.json.JsonUtil;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -57,6 +53,8 @@ public class HttpUtil {
     public static final String CONTENT_TYPE = "Content-Type";
 
     public static final String KEEP_ALIVE = "keep-alive";
+
+    public static final String BOUNDARY_SPLIT = "--";
 
     private static HttpURLConnection getHttpUrlConnection(HttpParam httpParam) throws Throwable {
         URL url = new URL(httpParam.getRequestUrl());
@@ -192,5 +190,72 @@ public class HttpUtil {
         httpParam.setRequestBody(requestBody);
         httpParam.setHttpOptions(httpOptions);
         return HttpUtil.httpRequest(httpParam);
+    }
+
+    public static String upload(HttpParam httpParam) {
+        HttpURLConnection httpUrlConnection = null;
+
+        OutputStream outputStream = null;
+
+        httpParam.setRequestMethod(POST);
+
+        String boundary = UUIDUtil.uuid();
+        httpParam.setHttpOptions(httpParam.getHttpOptions().contentType("multipart/form-data; boundary=" + boundary));
+
+        try {
+            // 获取连接对象
+            httpUrlConnection = getHttpUrlConnection(httpParam);
+
+            httpParam.setStartTime(System.currentTimeMillis());
+
+            // 发起连接
+            httpUrlConnection.connect();
+
+            outputStream = new BufferedOutputStream(httpUrlConnection.getOutputStream());
+
+            if (!CollectionUtil.isEmpty(httpParam.getTextParams())) {
+                StringBuilder sb = new StringBuilder();
+                httpParam.getTextParams().forEach((name, dataObj) -> {
+                    String data = ObjectUtil.obj2Str(dataObj);
+                    if (StringUtil.isEmpty(data)) {
+                        return;
+                    }
+                    sb.append(BOUNDARY_SPLIT).append(boundary).append(StringUtil.CRLF);
+                    sb.append("Content-Disposition: form-data; name=\"" + name + "\"").append(StringUtil.CRLF).append(StringUtil.CRLF);
+                    sb.append(data).append(StringUtil.CRLF);
+                });
+                outputStream.write(sb.toString().getBytes());
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(BOUNDARY_SPLIT).append(boundary).append(StringUtil.CRLF);
+            sb.append("Content-Disposition: form-data; name=\"" + httpParam.getFileParamName() + "\"; filename=\"" + httpParam.getFileName() + "\";").append(StringUtil.CRLF).append(StringUtil.CRLF);
+            outputStream.write(sb.toString().getBytes());
+
+            outputStream.write(httpParam.getFileBytes());
+
+            outputStream.write((StringUtil.CRLF + BOUNDARY_SPLIT + boundary + BOUNDARY_SPLIT + StringUtil.CRLF + StringUtil.CRLF).getBytes());
+            outputStream.flush();
+
+            httpParam.setHttpUrlConnection(httpUrlConnection);
+
+            return parseHttpResult(httpParam);
+        } catch (Throwable e) {
+            log.error(MessageUtil.format("upload error", e, "requestUrl", httpParam.getRequestUrl()));
+            return StringUtil.EMPTY;
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (Throwable e) {
+                    log.error(MessageUtil.format("upload outputStream close error", e, "requestUrl", httpParam.getRequestUrl()));
+                }
+            }
+
+            if (httpUrlConnection != null) {
+                // 释放连接
+                httpUrlConnection.disconnect();
+            }
+        }
     }
 }
