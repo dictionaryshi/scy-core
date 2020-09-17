@@ -160,4 +160,15 @@ public class CollectionUtil {
     public static <K, V> Map<K, V> synchronizedMap(Map<K, V> map) {
         return Collections.synchronizedMap(map);
     }
+
+    public static <T> List<T> enumeration2List(Enumeration<T> enumeration) {
+        if (ObjectUtil.isNull(enumeration)) {
+            return emptyList();
+        }
+        List<T> list = new ArrayList<>();
+        while (enumeration.hasMoreElements()) {
+            list.add(enumeration.nextElement());
+        }
+        return list;
+    }
 }
