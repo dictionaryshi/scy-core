@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * JoinPointBO
@@ -22,6 +23,8 @@ public class JoinPointBO {
     private Class<?> targetClass;
 
     private Object[] args;
+
+    private Map<String, Object> params;
 
     private Method method;
 
