@@ -1,7 +1,6 @@
 package com.scy.core.thread;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.scy.core.RuntimeUtil;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.model.ThreadMonitorBO;
 import lombok.extern.slf4j.Slf4j;
@@ -77,14 +76,6 @@ public class ThreadPoolUtil {
                         "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)))
         );
 
-        RuntimeUtil.addShutdownHook(new Thread(() -> {
-            try {
-                shutdown(transmittableThreadPoolExecutor, poolName);
-            } catch (Throwable e) {
-                log.error(MessageUtil.format("thread pool shutdown error", e, "poolName", poolName, "thread", Thread.currentThread().getName()));
-            }
-        }));
-
         return transmittableThreadPoolExecutor;
     }
 
@@ -125,14 +116,6 @@ public class ThreadPoolUtil {
                 (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject",
                         "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)))
         );
-
-        RuntimeUtil.addShutdownHook(new Thread(() -> {
-            try {
-                shutdown(transmittableScheduledThreadPoolExecutor, poolName);
-            } catch (Throwable e) {
-                log.error(MessageUtil.format("thread pool shutdown error", e, "poolName", poolName, "thread", Thread.currentThread().getName()));
-            }
-        }));
 
         return transmittableScheduledThreadPoolExecutor;
     }
