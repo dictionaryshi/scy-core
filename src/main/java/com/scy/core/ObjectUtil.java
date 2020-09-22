@@ -94,7 +94,7 @@ public class ObjectUtil {
         }
 
         if (object instanceof String) {
-            String numberStr = (String) object;
+            String numberStr = ((String) object).trim();
             if (StringUtil.isEmpty(numberStr)) {
                 return null;
             }
@@ -119,7 +119,7 @@ public class ObjectUtil {
         }
 
         if (object instanceof String) {
-            String numberStr = (String) object;
+            String numberStr = ((String) object).trim();
             if (StringUtil.isEmpty(numberStr)) {
                 return null;
             }
@@ -144,7 +144,7 @@ public class ObjectUtil {
         }
 
         if (object instanceof String) {
-            String numberStr = (String) object;
+            String numberStr = ((String) object).trim();
             if (StringUtil.isEmpty(numberStr)) {
                 return null;
             }
