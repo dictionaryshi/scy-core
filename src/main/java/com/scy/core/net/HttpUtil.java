@@ -227,12 +227,13 @@ public class HttpUtil {
                 outputStream.write(sb.toString().getBytes());
             }
 
-            StringBuilder sb = new StringBuilder();
-            sb.append(BOUNDARY_SPLIT).append(boundary).append(StringUtil.CRLF);
-            sb.append("Content-Disposition: form-data; name=\"" + httpParam.getFileParamName() + "\"; filename=\"" + httpParam.getFileName() + "\";").append(StringUtil.CRLF).append(StringUtil.CRLF);
-            outputStream.write(sb.toString().getBytes());
-
-            outputStream.write(httpParam.getFileBytes());
+            if (!ObjectUtil.isNull(httpParam.getFileBytes())) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(BOUNDARY_SPLIT).append(boundary).append(StringUtil.CRLF);
+                sb.append("Content-Disposition: form-data; name=\"" + httpParam.getFileParamName() + "\"; filename=\"" + httpParam.getFileName() + "\";").append(StringUtil.CRLF).append(StringUtil.CRLF);
+                outputStream.write(sb.toString().getBytes());
+                outputStream.write(httpParam.getFileBytes());
+            }
 
             outputStream.write((StringUtil.CRLF + BOUNDARY_SPLIT + boundary + BOUNDARY_SPLIT + StringUtil.CRLF + StringUtil.CRLF).getBytes());
             outputStream.flush();
