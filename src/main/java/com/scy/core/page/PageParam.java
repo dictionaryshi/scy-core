@@ -52,7 +52,8 @@ public class PageParam {
         return (this.page - 1) * limit;
     }
 
-    public static String appendLimit(String sql, PageParam pageParam) {
+    public static String appendOrderAndLimit(String sql, PageParam pageParam) {
+        sql = sql + " order by " + pageParam.getOrderField() + " " + (pageParam.isDesc() ? "desc" : "asc");
         return sql + " limit " + pageParam.getStartRowNumber() + ", " + pageParam.getLimit();
     }
 }
