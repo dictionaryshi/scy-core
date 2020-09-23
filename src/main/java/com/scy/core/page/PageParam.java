@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+
 /**
  * PageParam
  *
@@ -20,9 +23,12 @@ import lombok.ToString;
 @ToString
 public class PageParam {
 
+    @DecimalMin(value = "0", inclusive = false, message = "页码必须大于0")
     @ApiModelProperty(value = "查询页码", required = true, example = "1")
     private int page;
 
+    @DecimalMin(value = "0", inclusive = false, message = "每页查询量必须大于0")
+    @DecimalMax(value = "20", message = "每页查询量小于等于20")
     @ApiModelProperty(value = "每页查询数", required = true, example = "10")
     private int limit;
 
