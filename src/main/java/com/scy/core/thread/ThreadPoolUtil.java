@@ -1,6 +1,7 @@
 package com.scy.core.thread;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.scy.core.ObjectUtil;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.model.ThreadMonitorBO;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +81,9 @@ public class ThreadPoolUtil {
     }
 
     public static void shutdown(ThreadPoolExecutor threadPoolExecutor, String poolName) throws Throwable {
+        if (ObjectUtil.isNull(threadPoolExecutor)) {
+            return;
+        }
         threadPoolExecutor.shutdown();
         while (!threadPoolExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
             log.warn(MessageUtil.format("thread pool shutdown awaitTermination",
