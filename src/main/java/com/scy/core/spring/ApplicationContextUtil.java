@@ -7,6 +7,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.MutablePropertySources;
 import org.springframework.lang.Nullable;
 
 import java.lang.annotation.Annotation;
@@ -111,5 +114,17 @@ public class ApplicationContextUtil {
     @Nullable
     public static <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType) throws NoSuchBeanDefinitionException {
         return applicationContext.findAnnotationOnBean(beanName, annotationType);
+    }
+
+    public static MutablePropertySources getMutablePropertySources() {
+        return ((ConfigurableEnvironment) applicationContext.getEnvironment()).getPropertySources();
+    }
+
+    public static void addLastMapPropertySource(String name, Map<String, Object> source) {
+        getMutablePropertySources().addLast(new MapPropertySource(name, source));
+    }
+
+    public static void replaceMapPropertySource(String name, Map<String, Object> source) {
+        getMutablePropertySources().replace(name, new MapPropertySource(name, source));
     }
 }
