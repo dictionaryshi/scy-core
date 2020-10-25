@@ -89,7 +89,7 @@ public class ThreadPoolUtil {
             log.warn(MessageUtil.format("thread pool shutdown awaitTermination",
                     "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)));
         }
-        log.warn(MessageUtil.format("thread pool shutdown awaitTermination finish",
+        log.info(MessageUtil.format("thread pool shutdown awaitTermination finish",
                 "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)));
         threadPoolExecutor.shutdownNow();
     }
