@@ -8,6 +8,7 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.springframework.lang.Nullable;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -67,5 +68,23 @@ public class ReflectionsUtil {
 
     public static boolean isPublicStaticFinal(Field field) {
         return ReflectionUtils.isPublicStaticFinal(field);
+    }
+
+    public static void setField(Object targetObject, String name, @Nullable Object value) {
+        ReflectionTestUtils.setField(targetObject, name, value);
+    }
+
+    public static void setField(Class<?> targetClass, String name, @Nullable Object value) {
+        ReflectionTestUtils.setField(targetClass, name, value);
+    }
+
+    @Nullable
+    public static Object getField(Object targetObject, String name) {
+        return ReflectionTestUtils.getField(targetObject, name);
+    }
+
+    @Nullable
+    public static Object getField(Class<?> targetClass, String name) {
+        return ReflectionTestUtils.getField(targetClass, name);
     }
 }
