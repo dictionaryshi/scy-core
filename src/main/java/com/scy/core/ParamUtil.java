@@ -49,10 +49,6 @@ public class ParamUtil {
             return Boolean.TRUE;
         }
 
-        if (isStartWithBasePackage(paramClass)) {
-            return Boolean.TRUE;
-        }
-
         if (isStartWithAutoConfigurationPackage(paramClass)) {
             return Boolean.TRUE;
         }
