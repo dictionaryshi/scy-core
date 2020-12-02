@@ -21,14 +21,6 @@ public class ParamUtil {
     private ParamUtil() {
     }
 
-    public static boolean isStartWithBasePackage(Class<?> paramClass) {
-        String className = paramClass.getName();
-        if (className.startsWith(SystemUtil.BASE_PACKAGE)) {
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
-    }
-
     public static boolean isStartWithAutoConfigurationPackage(Class<?> paramClass) {
         String className = paramClass.getName();
         List<String> autoConfigurationPackages = AutoConfigurationPackageUtil.getAutoConfigurationPackage(ApplicationContextUtil.getApplicationContext());
@@ -62,7 +54,7 @@ public class ParamUtil {
         }
 
         Class<?> paramClass = param.getClass();
-        if (!isStartWithBasePackage(paramClass) && !isStartWithAutoConfigurationPackage(paramClass)) {
+        if (!isStartWithAutoConfigurationPackage(paramClass)) {
             return;
         }
 
