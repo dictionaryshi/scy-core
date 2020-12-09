@@ -31,31 +31,7 @@ public class JsonUtil {
 
     public static final String JSON = "json";
 
-    private static final ReadMapper READ_MAPPER = new ReadMapper();
-
-    private static final WriteMapper WRITE_MAPPER = new WriteMapper();
-
-    public static class ReadMapper extends ObjectMapper {
-
-        private static final ObjectMapper READ_MAPPER = getBaseObjectMapper();
-
-        static {
-            READ_MAPPER.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-        }
-
-        public ReadMapper() {
-            super(READ_MAPPER);
-        }
-    }
-
-    public static class WriteMapper extends ObjectMapper {
-
-        private static final ObjectMapper WRITE_MAPPER = getBaseObjectMapper();
-
-        public WriteMapper() {
-            super(WRITE_MAPPER);
-        }
-    }
+    private static final ObjectMapper OBJECT_MAPPER = getBaseObjectMapper();
 
     public static ObjectMapper getBaseObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
@@ -72,7 +48,7 @@ public class JsonUtil {
         }
 
         try {
-            return WRITE_MAPPER.writeValueAsString(object);
+            return OBJECT_MAPPER.writeValueAsString(object);
         } catch (Exception e) {
             log.error(MessageUtil.format("object2Json error", e, "object", object.toString()));
             return StringUtil.EMPTY;
@@ -87,7 +63,7 @@ public class JsonUtil {
             return null;
         }
         try {
-            return READ_MAPPER.readTree(json);
+            return OBJECT_MAPPER.readTree(json);
         } catch (Exception e) {
             log.error(MessageUtil.format("json2JsonNode error", e, "json", json));
             return null;
@@ -107,7 +83,7 @@ public class JsonUtil {
         }
 
         try {
-            return READ_MAPPER.readValue(json, typeReference);
+            return OBJECT_MAPPER.readValue(json, typeReference);
         } catch (Exception e) {
             log.error(MessageUtil.format("json2Object error", e, "json", json));
             return null;
@@ -124,7 +100,7 @@ public class JsonUtil {
         }
 
         try {
-            return READ_MAPPER.readValue(json, javaType);
+            return OBJECT_MAPPER.readValue(json, javaType);
         } catch (Exception e) {
             log.error(MessageUtil.format("json2Object error", e, "json", json));
             return null;
