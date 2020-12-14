@@ -3,6 +3,7 @@ package com.scy.core;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.scy.core.encode.UrlEncodeUtil;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.lang.Nullable;
 
 import java.util.*;
@@ -170,5 +171,16 @@ public class CollectionUtil {
             list.add(enumeration.nextElement());
         }
         return list;
+    }
+
+    public static <T> List<T> emptyIfNull(final List<T> list) {
+        return ListUtils.emptyIfNull(list);
+    }
+
+    /**
+     * 交集
+     */
+    public static <E> List<E> intersection(final List<? extends E> list1, final List<? extends E> list2) {
+        return ListUtils.intersection(list1, list2);
     }
 }
