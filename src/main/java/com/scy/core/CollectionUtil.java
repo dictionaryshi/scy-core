@@ -177,6 +177,9 @@ public class CollectionUtil {
         return ListUtils.emptyIfNull(list);
     }
 
+    /**
+     * 交集
+     */
     public static <E> List<E> intersection(final List<? extends E> list1, final List<? extends E> list2) {
         return ListUtils.intersection(list1, list2);
     }
