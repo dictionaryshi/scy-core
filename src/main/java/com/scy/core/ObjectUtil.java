@@ -84,9 +84,9 @@ public class ObjectUtil {
         return Boolean.FALSE;
     }
 
-    public static Integer obj2Int(Object object) {
-        if (object == null) {
-            return null;
+    public static Integer obj2Int(Object object, Integer defaultValue) {
+        if (ObjectUtil.isNull(object)) {
+            return defaultValue;
         }
 
         if (object instanceof Number) {
@@ -96,22 +96,22 @@ public class ObjectUtil {
         if (object instanceof String) {
             String numberStr = ((String) object).trim();
             if (StringUtil.isEmpty(numberStr)) {
-                return null;
+                return defaultValue;
             }
             try {
                 return Integer.parseInt(numberStr);
             } catch (Exception e) {
                 log.error(MessageUtil.format("obj2Int error", e, "object", object));
-                return null;
+                return defaultValue;
             }
         }
 
-        return null;
+        return defaultValue;
     }
 
-    public static Double obj2Double(Object object) {
-        if (object == null) {
-            return null;
+    public static Double obj2Double(Object object, Double defaultValue) {
+        if (ObjectUtil.isNull(object)) {
+            return defaultValue;
         }
 
         if (object instanceof Number) {
@@ -121,22 +121,22 @@ public class ObjectUtil {
         if (object instanceof String) {
             String numberStr = ((String) object).trim();
             if (StringUtil.isEmpty(numberStr)) {
-                return null;
+                return defaultValue;
             }
             try {
                 return Double.parseDouble(numberStr);
             } catch (Exception e) {
                 log.error(MessageUtil.format("obj2Double error", e, "object", object));
-                return null;
+                return defaultValue;
             }
         }
 
-        return null;
+        return defaultValue;
     }
 
-    public static Long obj2Long(Object object) {
-        if (object == null) {
-            return null;
+    public static Long obj2Long(Object object, Long defaultValue) {
+        if (ObjectUtil.isNull(object)) {
+            return defaultValue;
         }
 
         if (object instanceof Number) {
@@ -146,16 +146,16 @@ public class ObjectUtil {
         if (object instanceof String) {
             String numberStr = ((String) object).trim();
             if (StringUtil.isEmpty(numberStr)) {
-                return null;
+                return defaultValue;
             }
             try {
                 return Long.parseLong(numberStr);
             } catch (Exception e) {
                 log.error(MessageUtil.format("obj2Long error", e, "object", object));
-                return null;
+                return defaultValue;
             }
         }
 
-        return null;
+        return defaultValue;
     }
 }
