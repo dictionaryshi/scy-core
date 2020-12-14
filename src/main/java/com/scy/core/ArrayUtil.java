@@ -2,6 +2,9 @@ package com.scy.core;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * ArrayUtil
  *
@@ -51,5 +54,10 @@ public class ArrayUtil {
 
     public static boolean isEmpty(Object arr) {
         return getLength(arr) == 0;
+    }
+
+    @SafeVarargs
+    public static <T> List<T> asList(T... a) {
+        return Arrays.asList(a);
     }
 }
