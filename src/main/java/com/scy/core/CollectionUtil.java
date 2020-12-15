@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.scy.core.encode.UrlEncodeUtil;
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.collections4.SetUtils;
 import org.springframework.lang.Nullable;
 
 import java.util.*;
@@ -182,5 +184,37 @@ public class CollectionUtil {
      */
     public static <E> List<E> intersection(final List<? extends E> list1, final List<? extends E> list2) {
         return ListUtils.intersection(list1, list2);
+    }
+
+    public static <T> Set<T> emptyIfNull(final Set<T> set) {
+        return SetUtils.emptyIfNull(set);
+    }
+
+    public static <K, V> Map<K, V> emptyIfNull(final Map<K, V> map) {
+        return MapUtils.emptyIfNull(map);
+    }
+
+    public static <K, V> V getObject(final Map<K, V> map, final K key, final V defaultValue) {
+        return MapUtils.getObject(map, key, defaultValue);
+    }
+
+    public static <K> String getString(final Map<? super K, ?> map, final K key, final String defaultValue) {
+        return MapUtils.getString(map, key, defaultValue);
+    }
+
+    public static <K> Boolean getBoolean(final Map<? super K, ?> map, final K key, final Boolean defaultValue) {
+        return MapUtils.getBoolean(map, key, defaultValue);
+    }
+
+    public static <K> Integer getInteger(final Map<? super K, ?> map, final K key, final Integer defaultValue) {
+        return MapUtils.getInteger(map, key, defaultValue);
+    }
+
+    public static <K> Long getLong(final Map<? super K, ?> map, final K key, final Long defaultValue) {
+        return MapUtils.getLong(map, key, defaultValue);
+    }
+
+    public static <K> Double getDouble(final Map<? super K, ?> map, final K key, final Double defaultValue) {
+        return MapUtils.getDouble(map, key, defaultValue);
     }
 }
