@@ -186,6 +186,10 @@ public class CollectionUtil {
         return ListUtils.intersection(list1, list2);
     }
 
+    public static <E> List<E> removeAll(final Collection<E> collection, final Collection<?> remove) {
+        return ListUtils.removeAll(collection, remove);
+    }
+
     public static <T> Set<T> emptyIfNull(final Set<T> set) {
         return SetUtils.emptyIfNull(set);
     }
