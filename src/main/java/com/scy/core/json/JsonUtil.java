@@ -39,6 +39,8 @@ public class JsonUtil {
         mapper.setDateFormat(new SimpleDateFormat(DateUtil.PATTERN_SECOND));
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setTimeZone(SystemUtil.TIME_ZONE_SHANG_HAI);
+        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        mapper.enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT);
         return mapper;
     }
 
