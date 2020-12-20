@@ -9,6 +9,8 @@ import org.apache.commons.collections4.SetUtils;
 import org.springframework.lang.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * CollectionUtil
@@ -220,5 +222,17 @@ public class CollectionUtil {
 
     public static <K> Double getDouble(final Map<? super K, ?> map, final K key, final Double defaultValue) {
         return MapUtils.getDouble(map, key, defaultValue);
+    }
+
+    public static <T> Stream<T> stream(Collection<T> collection) {
+        if (Objects.isNull(collection)) {
+            return Stream.empty();
+        }
+
+        return collection.stream();
+    }
+
+    public static <T, R> Stream<R> map(Collection<T> collection, Function<T, R> mapper) {
+        return stream(collection).filter(Objects::nonNull).map(mapper).filter(Objects::nonNull);
     }
 }
