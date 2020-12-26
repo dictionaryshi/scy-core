@@ -35,6 +35,8 @@ public class StringUtil {
 
     public static final String QUESTION = "?";
 
+    public static final String PERCENT = "%";
+
     public static final String CR = StringUtils.CR;
     public static final String LF = StringUtils.LF;
     public static final String CRLF = CR + LF;
