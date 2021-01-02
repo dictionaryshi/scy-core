@@ -101,4 +101,8 @@ public class StreamUtil {
     public static <T> Stream<T> of(T... values) {
         return Stream.of(values);
     }
+
+    public static <T, U extends Comparable<U>> Comparator<T> comparing(Function<T, U> keyExtractor) {
+        return Comparator.comparing(keyExtractor);
+    }
 }
