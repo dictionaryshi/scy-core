@@ -3,12 +3,13 @@ package com.scy.core;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -104,5 +105,29 @@ public class StreamUtil {
 
     public static <T, U extends Comparable<U>> Comparator<T> comparing(Function<T, U> keyExtractor) {
         return Comparator.comparing(keyExtractor);
+    }
+
+    public static <T> Stream<T> stream(T[] array) {
+        return Arrays.stream(array);
+    }
+
+    public static <T, K> Map<K, List<T>> groupingBy(Stream<T> stream, Function<T, K> function) {
+        return stream.collect(Collectors.groupingBy(function));
+    }
+
+    public static <T, K, D> Map<K, Set<D>> groupingBy(Stream<T> stream, Function<T, K> keyFunction, Function<T, D> mapper) {
+        return stream.collect(Collectors.groupingBy(keyFunction, Collectors.mapping(mapper, Collectors.toSet())));
+    }
+
+    public static <T> Map<Boolean, List<T>> partitioningBy(Stream<T> stream, Predicate<T> predicate) {
+        return stream.collect(Collectors.partitioningBy(predicate));
+    }
+
+    public static <T> String join(Stream<T> stream, Function<T, String> function, String delimiter) {
+        return stream.map(function).collect(Collectors.joining(delimiter));
+    }
+
+    public static IntStream range(int startInclusive, int endExclusive) {
+        return IntStream.range(startInclusive, endExclusive);
     }
 }

@@ -9,7 +9,9 @@ import org.apache.commons.collections4.SetUtils;
 import org.springframework.lang.Nullable;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -234,5 +236,17 @@ public class CollectionUtil {
 
     public static <T, R> Stream<R> map(Collection<T> collection, Function<T, R> mapper) {
         return stream(collection).filter(Objects::nonNull).map(mapper).filter(Objects::nonNull);
+    }
+
+    public static <T, K> Map<K, T> toMap(Stream<T> stream, Function<T, K> keyMapper) {
+        return stream.collect(Collectors.toMap(keyMapper, Function.identity(), (oldValue, newValue) -> newValue));
+    }
+
+    public static <T, K, V> Map<K, V> toMap(Stream<T> stream, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+        return stream.collect(Collectors.toMap(keyMapper, valueMapper, (oldValue, newValue) -> newValue));
+    }
+
+    public static <K, V> V merge(Map<K, V> map, K key, V value, BiFunction<V, V, V> remappingFunction) {
+        return map.merge(key, value, remappingFunction);
     }
 }
