@@ -65,4 +65,8 @@ public class DiffUtil {
 
         return result;
     }
+
+    public static boolean isDiff(Object before, Object after) {
+        return !CollectionUtil.isEmpty(diff(before, after));
+    }
 }
