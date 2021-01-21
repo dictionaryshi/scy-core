@@ -22,9 +22,14 @@ public class SystemUtil {
     public static final String SYSTEM_LINE_BREAK = System.lineSeparator();
 
     /**
+     * 上海ZoneId
+     */
+    public static final ZoneId ZONE_ID_SHANG_HAI = ZoneId.of("CTT", ZoneId.SHORT_IDS);
+
+    /**
      * 上海时区
      */
-    public static final TimeZone TIME_ZONE_SHANG_HAI = TimeZone.getTimeZone(ZoneId.SHORT_IDS.get("CTT"));
+    public static final TimeZone TIME_ZONE_SHANG_HAI = TimeZone.getTimeZone(ZONE_ID_SHANG_HAI);
 
     /**
      * 基础包名
