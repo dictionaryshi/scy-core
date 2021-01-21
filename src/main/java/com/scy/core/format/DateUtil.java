@@ -1,8 +1,11 @@
 package com.scy.core.format;
 
+import com.scy.core.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -49,6 +52,32 @@ public class DateUtil {
     public static final long HOUR = 60 * MINUTE;
 
     public static final long DAY = 24 * HOUR;
+
+    public static final DateTimeFormatter ISO_LOCAL_DATE = DateTimeFormatter.ISO_LOCAL_DATE;
+
+    public static final DateTimeFormatter ISO_LOCAL_TIME = DateTimeFormatter.ISO_LOCAL_TIME;
+
+    public static final DateTimeFormatter ISO_LOCAL_DATE_TIME = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+    public static final DateTimeFormatter ISO_WEEK_DATE = DateTimeFormatter.ISO_WEEK_DATE;
+
+    public static final DateTimeFormatter BASIC_ISO_DATE = DateTimeFormatter.BASIC_ISO_DATE;
+
+    public static final DateTimeFormatter FORMATTER_PATTERN_MILLISECOND = DateTimeFormatter.ofPattern(PATTERN_MILLISECOND);
+
+    public static final DateTimeFormatter FORMATTER_PATTERN_SECOND = DateTimeFormatter.ofPattern(PATTERN_SECOND);
+
+    public static final DateTimeFormatter FORMATTER_PATTERN_MINUTE = DateTimeFormatter.ofPattern(PATTERN_MINUTE);
+
+    public static final DateTimeFormatter FORMATTER_PATTERN_HOUR = DateTimeFormatter.ofPattern(PATTERN_HOUR);
+
+    public static final DateTimeFormatter FORMATTER_HUMP_PATTERN_MILLISECOND = DateTimeFormatter.ofPattern(HUMP_PATTERN_MILLISECOND);
+
+    public static final DateTimeFormatter FORMATTER_HUMP_PATTERN_SECOND = DateTimeFormatter.ofPattern(HUMP_PATTERN_SECOND);
+
+    public static final DateTimeFormatter FORMATTER_HUMP_PATTERN_MINUTE = DateTimeFormatter.ofPattern(HUMP_PATTERN_MINUTE);
+
+    public static final DateTimeFormatter FORMATTER_HUMP_PATTERN_HOUR = DateTimeFormatter.ofPattern(HUMP_PATTERN_HOUR);
 
     public static int millisecond2Second(long millisecond) {
         return (int) (millisecond / SECOND);
@@ -151,5 +180,9 @@ public class DateUtil {
         cal.set(Calendar.SECOND, 59);
         cal.set(Calendar.MILLISECOND, 999);
         return cal.getTime();
+    }
+
+    public static LocalDateTime nowLocalDateTime() {
+        return LocalDateTime.now(SystemUtil.ZONE_ID_SHANG_HAI);
     }
 }
