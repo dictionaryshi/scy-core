@@ -6,10 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 
 /**
  * DateUtil
@@ -53,6 +51,8 @@ public class DateUtil {
 
     public static final long DAY = 24 * HOUR;
 
+    public static final int MAX_NANO = 999999999;
+
     public static final DateTimeFormatter ISO_LOCAL_DATE = DateTimeFormatter.ISO_LOCAL_DATE;
 
     public static final DateTimeFormatter ISO_LOCAL_TIME = DateTimeFormatter.ISO_LOCAL_TIME;
@@ -92,8 +92,7 @@ public class DateUtil {
     }
 
     public static String getCurrentDateStr() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(PATTERN_SECOND);
-        return dateFormat.format(new Date());
+        return FORMATTER_PATTERN_SECOND.format(nowLocalDateTime());
     }
 
     public static Date str2Date(String dateStr, String pattern) {
@@ -106,9 +105,22 @@ public class DateUtil {
         }
     }
 
+    public static LocalDateTime str2LocalDateTime(String dateStr, String pattern) {
+        try {
+            return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern(pattern));
+        } catch (Exception e) {
+            log.error(MessageUtil.format("str2LocalDateTime error", e, "dateStr", dateStr, "pattern", pattern));
+            return null;
+        }
+    }
+
     public static String date2Str(Date date, String pattern) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         return dateFormat.format(date);
+    }
+
+    public static String localDateTime2Str(LocalDateTime localDateTime, String pattern) {
+        return localDateTime.format(DateTimeFormatter.ofPattern(pattern));
     }
 
     public static Date getDayOffset(Date date, int offset) {
@@ -132,6 +144,22 @@ public class DateUtil {
         cal.setTime(date);
         cal.add(field, offset);
         return cal.getTime();
+    }
+
+    public static LocalDateTime getDayOffset(LocalDateTime localDateTime, int offset) {
+        return localDateTime.plusDays(offset);
+    }
+
+    public static LocalDateTime getHourOffset(LocalDateTime localDateTime, int offset) {
+        return localDateTime.plusHours(offset);
+    }
+
+    public static LocalDateTime getMinuteOffset(LocalDateTime localDateTime, int offset) {
+        return localDateTime.plusMinutes(offset);
+    }
+
+    public static LocalDateTime getSecondOffset(LocalDateTime localDateTime, int offset) {
+        return localDateTime.plusSeconds(offset);
     }
 
     public static SimpleDateFormat getGmtSimpleDateFormat() {
@@ -182,7 +210,35 @@ public class DateUtil {
         return cal.getTime();
     }
 
+    public static LocalDateTime getDayStartTime(LocalDateTime localDateTime) {
+        return localDateTime.withHour(0).withMinute(0).withSecond(0).withNano(0);
+    }
+
+    public static LocalDateTime getDayEndTime(LocalDateTime localDateTime) {
+        return localDateTime.withHour(23).withMinute(59).withSecond(59).withNano(MAX_NANO);
+    }
+
+    public static LocalDateTime getMonthStartTime(LocalDateTime localDateTime) {
+        return localDateTime.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+    }
+
+    public static LocalDateTime getMonthEndTime(LocalDateTime localDateTime) {
+        return localDateTime.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(MAX_NANO);
+    }
+
     public static LocalDateTime nowLocalDateTime() {
         return LocalDateTime.now(SystemUtil.ZONE_ID_SHANG_HAI);
+    }
+
+    public static long toEpochMilli(LocalDateTime localDateTime) {
+        return localDateTime.atZone(SystemUtil.ZONE_ID_SHANG_HAI).toInstant().toEpochMilli();
+    }
+
+    public static LocalDateTime date2LocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), SystemUtil.ZONE_ID_SHANG_HAI);
+    }
+
+    public static Date localDateTime2Date(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(SystemUtil.ZONE_ID_SHANG_HAI).toInstant());
     }
 }
