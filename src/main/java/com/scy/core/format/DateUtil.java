@@ -4,6 +4,7 @@ import com.scy.core.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
@@ -240,5 +241,9 @@ public class DateUtil {
 
     public static Date localDateTime2Date(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(SystemUtil.ZONE_ID_SHANG_HAI).toInstant());
+    }
+
+    public static LocalDateTime millis2LocalDateTime(long millis) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), SystemUtil.ZONE_ID_SHANG_HAI);
     }
 }
