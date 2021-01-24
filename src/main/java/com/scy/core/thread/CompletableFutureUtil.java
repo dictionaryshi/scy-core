@@ -23,8 +23,16 @@ public class CompletableFutureUtil {
         return CompletableFuture.supplyAsync(supplier, executor);
     }
 
+    public static CompletableFuture<Void> runAsync(Runnable runnable, Executor executor) {
+        return CompletableFuture.runAsync(runnable, executor);
+    }
+
     public static <U> CompletableFuture<U> completedFuture(U value) {
         return CompletableFuture.completedFuture(value);
+    }
+
+    public static <U> boolean isDone(CompletableFuture<U> completableFuture) {
+        return completableFuture.isDone();
     }
 
     public static <U> U get(CompletableFuture<U> completableFuture) throws InterruptedException, ExecutionException {
@@ -60,6 +68,10 @@ public class CompletableFutureUtil {
         return completableFuture.thenAccept(action);
     }
 
+    public static <T> CompletableFuture<Void> thenRun(CompletableFuture<T> completableFuture, Runnable action) {
+        return completableFuture.thenRun(action);
+    }
+
     public static <T, U, V> CompletableFuture<V> thenCombine(
             CompletableFuture<T> completableFuture,
             CompletionStage<U> other,
@@ -67,11 +79,39 @@ public class CompletableFutureUtil {
         return completableFuture.thenCombine(other, fn);
     }
 
+    public static <T, U> CompletableFuture<Void> thenAcceptBoth(
+            CompletableFuture<T> completableFuture,
+            CompletionStage<U> other,
+            BiConsumer<T, U> action) {
+        return completableFuture.thenAcceptBoth(other, action);
+    }
+
+    public static <T> CompletableFuture<Void> runAfterBoth(
+            CompletableFuture<T> completableFuture,
+            CompletionStage<?> other,
+            Runnable action) {
+        return completableFuture.runAfterBoth(other, action);
+    }
+
     public static <T, U> CompletableFuture<U> applyToEither(
             CompletableFuture<T> completableFuture,
             CompletionStage<T> other,
             Function<T, U> fn) {
         return completableFuture.applyToEither(other, fn);
+    }
+
+    public static <T> CompletableFuture<Void> acceptEither(
+            CompletableFuture<T> completableFuture,
+            CompletionStage<T> other,
+            Consumer<T> action) {
+        return completableFuture.acceptEither(other, action);
+    }
+
+    public static <T> CompletableFuture<Void> runAfterEither(
+            CompletableFuture<T> completableFuture,
+            CompletionStage<?> other,
+            Runnable action) {
+        return completableFuture.runAfterEither(other, action);
     }
 
     public static <T, U> CompletableFuture<U> thenCompose(
@@ -109,5 +149,9 @@ public class CompletableFutureUtil {
 
     public static CompletableFuture<Object> anyOf(CompletableFuture<?>... cfs) {
         return CompletableFuture.anyOf(cfs);
+    }
+
+    public static <T> boolean cancel(CompletableFuture<T> completableFuture, boolean mayInterruptIfRunning) {
+        return completableFuture.cancel(mayInterruptIfRunning);
     }
 }

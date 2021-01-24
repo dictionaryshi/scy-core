@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -23,6 +25,18 @@ public class OptionalUtil {
 
     public static <T> Optional<T> ofNullable(T value) {
         return Optional.ofNullable(value);
+    }
+
+    public static <T> boolean isPresent(Optional<T> optional) {
+        return optional.isPresent();
+    }
+
+    public static <T> void ifPresent(Optional<T> optional, Consumer<T> consumer) {
+        optional.ifPresent(consumer);
+    }
+
+    public static <T> Optional<T> filter(Optional<T> optional, Predicate<T> predicate) {
+        return optional.filter(predicate);
     }
 
     public static <T, U> Optional<U> map(Optional<T> optional, Function<T, U> mapper) {
