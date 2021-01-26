@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -245,5 +247,9 @@ public class DateUtil {
 
     public static LocalDateTime millis2LocalDateTime(long millis) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), SystemUtil.ZONE_ID_SHANG_HAI);
+    }
+
+    public static long between(Temporal start, Temporal end, ChronoUnit chronoUnit) {
+        return chronoUnit.between(start, end);
     }
 }
