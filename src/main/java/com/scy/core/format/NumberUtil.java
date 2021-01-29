@@ -39,6 +39,42 @@ public class NumberUtil {
         return Math.round(number);
     }
 
+    public static int abs(int a) {
+        return Math.abs(a);
+    }
+
+    public static long abs(long a) {
+        return Math.abs(a);
+    }
+
+    public static double abs(double a) {
+        return Math.abs(a);
+    }
+
+    public static int max(int a, int b) {
+        return Math.max(a, b);
+    }
+
+    public static long max(long a, long b) {
+        return Math.max(a, b);
+    }
+
+    public static double max(double a, double b) {
+        return Math.max(a, b);
+    }
+
+    public static int min(int a, int b) {
+        return Math.min(a, b);
+    }
+
+    public static long min(long a, long b) {
+        return Math.min(a, b);
+    }
+
+    public static double min(double a, double b) {
+        return Math.min(a, b);
+    }
+
     public static BigDecimal add(Number add, Number... numbers) {
         add = null2Zero(add);
         BigDecimal result = new BigDecimal(add.toString());
