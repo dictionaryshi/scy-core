@@ -1,5 +1,6 @@
 package com.scy.core.format;
 
+import com.scy.core.StringUtil;
 import com.scy.core.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -99,6 +100,10 @@ public class DateUtil {
     }
 
     public static Date str2Date(String dateStr, String pattern) {
+        if (StringUtil.isEmpty(dateStr)) {
+            return null;
+        }
+
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         try {
             return dateFormat.parse(dateStr);
@@ -109,6 +114,10 @@ public class DateUtil {
     }
 
     public static LocalDateTime str2LocalDateTime(String dateStr, String pattern) {
+        if (StringUtil.isEmpty(dateStr)) {
+            return null;
+        }
+
         try {
             return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern(pattern));
         } catch (Exception e) {
@@ -118,11 +127,19 @@ public class DateUtil {
     }
 
     public static String date2Str(Date date, String pattern) {
+        if (Objects.isNull(date)) {
+            return StringUtil.EMPTY;
+        }
+
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         return dateFormat.format(date);
     }
 
     public static String localDateTime2Str(LocalDateTime localDateTime, String pattern) {
+        if (Objects.isNull(localDateTime)) {
+            return StringUtil.EMPTY;
+        }
+
         return localDateTime.format(DateTimeFormatter.ofPattern(pattern));
     }
 
