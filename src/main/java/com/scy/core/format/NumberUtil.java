@@ -18,6 +18,8 @@ public class NumberUtil {
 
     public static final Number ZERO = 0;
 
+    private static final int MULTIPLIER = 100;
+
     /**
      * 向上取整
      */
@@ -150,5 +152,13 @@ public class NumberUtil {
             return ZERO;
         }
         return number;
+    }
+
+    public static double fenToYuan(long fen) {
+        return divide(fen, 2, MULTIPLIER).doubleValue();
+    }
+
+    public static long yuanToFen(double yuan) {
+        return multiply(yuan, MULTIPLIER).longValue();
     }
 }
