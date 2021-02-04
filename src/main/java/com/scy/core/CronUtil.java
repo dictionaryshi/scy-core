@@ -1,11 +1,12 @@
 package com.scy.core;
 
 import com.google.common.collect.Lists;
+import com.scy.core.format.DateUtil;
 import com.scy.core.format.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.support.CronSequenceGenerator;
+import org.springframework.scheduling.support.CronExpression;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,15 +22,15 @@ public class CronUtil {
 
     }
 
-    public static Date nextExecuteTime(String cron) {
-        return nextExecuteTime(cron, new Date());
+    public static LocalDateTime nextExecuteTime(String cron) {
+        return nextExecuteTime(cron, DateUtil.nowLocalDateTime());
     }
 
-    public static Date nextExecuteTime(String cron, Date startTime) {
-        Date nextExecuteTime;
+    public static LocalDateTime nextExecuteTime(String cron, LocalDateTime startTime) {
+        LocalDateTime nextExecuteTime;
         try {
-            CronSequenceGenerator cronSequenceGenerator = new CronSequenceGenerator(cron, SystemUtil.TIME_ZONE_SHANG_HAI);
-            nextExecuteTime = cronSequenceGenerator.next(startTime);
+            CronExpression cronExpression = CronExpression.parse(cron);
+            nextExecuteTime = cronExpression.next(startTime);
         } catch (Throwable throwable) {
             log.error(MessageUtil.format("nextExecuteTime error", throwable, "cron", cron, "startTime", startTime));
             return null;
@@ -39,17 +40,17 @@ public class CronUtil {
             return null;
         }
 
-        if (nextExecuteTime.before(startTime)) {
+        if (nextExecuteTime.isBefore(startTime)) {
             return null;
         }
 
         return nextExecuteTime;
     }
 
-    public static List<Date> nextExecuteTime(String cron, Date startTime, int times) {
-        List<Date> nextExecuteTimes = Lists.newArrayList();
+    public static List<LocalDateTime> nextExecuteTime(String cron, LocalDateTime startTime, int times) {
+        List<LocalDateTime> nextExecuteTimes = Lists.newArrayList();
         for (int i = 0; i < times; i++) {
-            Date nextExecuteTime = nextExecuteTime(cron, startTime);
+            LocalDateTime nextExecuteTime = nextExecuteTime(cron, startTime);
             if (ObjectUtil.isNull(nextExecuteTime)) {
                 return nextExecuteTimes;
             }
