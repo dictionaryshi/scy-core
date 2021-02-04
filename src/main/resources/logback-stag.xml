@@ -24,7 +24,7 @@
         </filter>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log_home}/error-${appkey}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${log_home}/${appkey}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>512MB</maxFileSize>
             <maxHistory>90</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
@@ -39,7 +39,7 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log_home}/${appkey}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${log_home}/${appkey}/all.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>512MB</maxFileSize>
             <maxHistory>90</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
