@@ -1,6 +1,9 @@
 package com.scy.core.reflect;
 
+import com.scy.core.CollectionUtil;
 import com.scy.core.ObjectUtil;
+import com.scy.core.spring.ApplicationContextUtil;
+import com.scy.core.spring.AutoConfigurationPackageUtil;
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
@@ -26,7 +29,7 @@ public class ReflectionsUtil {
     private ReflectionsUtil() {
     }
 
-    public static final String ALL_PACKAGE = ".";
+    public static final String ALL_PACKAGE = CollectionUtil.firstElement(AutoConfigurationPackageUtil.getAutoConfigurationPackage(ApplicationContextUtil.getApplicationContext()));
 
     public static volatile Reflections classReflections;
 
