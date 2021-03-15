@@ -3,6 +3,7 @@ package com.scy.core;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.scy.core.encode.UrlEncodeUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.collections4.SetUtils;
@@ -248,5 +249,12 @@ public class CollectionUtil {
 
     public static <K, V> V merge(Map<K, V> map, K key, V value, BiFunction<V, V, V> remappingFunction) {
         return map.merge(key, value, remappingFunction);
+    }
+
+    public static <T> List<T> subList(List<T> list, int n) {
+        if (CollectionUtils.size(list) <= n) {
+            return list;
+        }
+        return list.subList(0, n);
     }
 }
