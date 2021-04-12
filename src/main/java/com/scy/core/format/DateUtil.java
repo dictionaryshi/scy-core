@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
@@ -268,5 +270,9 @@ public class DateUtil {
 
     public static long between(Temporal start, Temporal end, ChronoUnit chronoUnit) {
         return chronoUnit.between(start, end);
+    }
+
+    public static LocalDateTime toLocalDateTime(int hour, int minute, int second, int nanoOfSecond) {
+        return LocalDateTime.of(LocalDate.now(SystemUtil.ZONE_ID_SHANG_HAI), LocalTime.of(hour, minute, second, nanoOfSecond));
     }
 }
