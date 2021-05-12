@@ -257,4 +257,16 @@ public class CollectionUtil {
         }
         return list.subList(0, n);
     }
+
+    public static <K, V> V getOrDefault(final Map<K, V> map, K key, V defaultValue) {
+        return map.getOrDefault(key, defaultValue);
+    }
+
+    public static <K, V> V putIfAbsent(final Map<K, V> map, K key, V value) {
+        return map.putIfAbsent(key, value);
+    }
+
+    public static <K, V> V computeIfAbsent(final Map<K, V> map, K key, Function<K, V> mappingFunction) {
+        return map.computeIfAbsent(key, mappingFunction);
+    }
 }
