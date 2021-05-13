@@ -269,4 +269,11 @@ public class CollectionUtil {
     public static <K, V> V computeIfAbsent(final Map<K, V> map, K key, Function<K, V> mappingFunction) {
         return map.computeIfAbsent(key, mappingFunction);
     }
+
+    public static <T> List<T> mergeList(List<List<T>> lists) {
+        return emptyIfNull(lists).stream()
+                .filter(list -> !isEmpty(list))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
 }
