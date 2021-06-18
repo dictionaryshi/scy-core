@@ -12,6 +12,7 @@ import org.springframework.lang.Nullable;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -275,5 +276,9 @@ public class CollectionUtil {
                 .filter(list -> !isEmpty(list))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+    }
+
+    public static <T> boolean removeIf(Collection<T> collection, Predicate<T> filter) {
+        return collection.removeIf(filter);
     }
 }
