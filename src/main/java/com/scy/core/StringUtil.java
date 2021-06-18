@@ -147,4 +147,8 @@ public class StringUtil {
         matcher.appendTail(sb);
         return sb.toString();
     }
+
+    public static String emptyIfNull(String str) {
+        return str == null ? EMPTY : str;
+    }
 }
