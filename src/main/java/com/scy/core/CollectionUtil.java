@@ -281,4 +281,20 @@ public class CollectionUtil {
     public static <T> boolean removeIf(Collection<T> collection, Predicate<T> filter) {
         return collection.removeIf(filter);
     }
+
+    /**
+     * 获取重复元素
+     */
+    public static <T> List<T> getDuplicateElements(List<T> list) {
+        if (isEmpty(list)) {
+            return Collections.emptyList();
+        }
+
+        return list.stream()
+                .collect(Collectors.toMap(e -> e, e -> 1, Integer::sum))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
 }

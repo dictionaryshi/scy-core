@@ -9,6 +9,7 @@ import com.scy.core.StringUtil;
 import com.scy.core.SystemUtil;
 import com.scy.core.format.DateUtil;
 import com.scy.core.format.MessageUtil;
+import com.scy.core.reflect.ClassUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
@@ -86,6 +87,24 @@ public class JsonUtil {
 
         try {
             return OBJECT_MAPPER.readValue(json, typeReference);
+        } catch (Exception e) {
+            log.error(MessageUtil.format("json2Object error", e, "json", json));
+            return null;
+        }
+    }
+
+    @SuppressWarnings(ClassUtil.UNCHECKED)
+    public static <T> T json2Object(String json, Class<T> valueType) {
+        if (StringUtil.isEmpty(json)) {
+            return null;
+        }
+
+        if (Objects.equals(valueType, String.class)) {
+            return (T) json;
+        }
+
+        try {
+            return OBJECT_MAPPER.readValue(json, valueType);
         } catch (Exception e) {
             log.error(MessageUtil.format("json2Object error", e, "json", json));
             return null;
