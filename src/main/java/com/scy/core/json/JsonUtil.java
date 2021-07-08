@@ -128,6 +128,32 @@ public class JsonUtil {
         }
     }
 
+    public static <T> T convertValue(Object fromValue, Class<T> toValueType) {
+        if (Objects.isNull(fromValue) || Objects.isNull(toValueType)) {
+            return null;
+        }
+
+        try {
+            return OBJECT_MAPPER.convertValue(fromValue, toValueType);
+        } catch (Exception e) {
+            log.error(MessageUtil.format("convertValue error", e, "fromValue", fromValue));
+            return null;
+        }
+    }
+
+    public static <T> T convertValue(Object fromValue, TypeReference<T> toValueTypeRef) {
+        if (Objects.isNull(fromValue) || Objects.isNull(toValueTypeRef)) {
+            return null;
+        }
+
+        try {
+            return OBJECT_MAPPER.convertValue(fromValue, toValueTypeRef);
+        } catch (Exception e) {
+            log.error(MessageUtil.format("convertValue error", e, "fromValue", fromValue));
+            return null;
+        }
+    }
+
     private static JavaType getJavaType(Type type) {
         if (type instanceof ParameterizedType) {
             // 泛型
