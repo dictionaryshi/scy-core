@@ -26,7 +26,7 @@ public class AviatorUtil {
             return (T) AviatorEvaluator.execute(expression, JsonUtil.convertValue(obj, new TypeReference<HashMap<String, Object>>() {
             }), Boolean.TRUE);
         } catch (Exception e) {
-            log.error(MessageUtil.format("AviatorUtil.execute error", "expression", expression, "obj", obj));
+            log.error(MessageUtil.format("AviatorUtil.execute error", e, "expression", expression, "obj", obj));
             return null;
         }
     }
