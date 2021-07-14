@@ -1,5 +1,6 @@
 package com.scy.core;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.json.JsonUtil;
@@ -7,12 +8,7 @@ import com.scy.core.model.DiffBO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
-import java.util.AbstractMap;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -85,6 +81,27 @@ public class DiffUtil {
                 .filter(entry -> Objects.nonNull(entry) && Objects.nonNull(entry.getKey()))
                 .flatMap(DiffUtil::flatEntry)
                 .collect(TreeMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), TreeMap::putAll);
+    }
+
+    public static Map<String, Object> diffJson(String oldJson, String newJson) {
+        Map<String, Object> oldMap = JsonUtil.json2Object(oldJson, new TypeReference<HashMap<String, Object>>() {
+        });
+        if (CollectionUtil.isEmpty(oldMap)) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, Object> newMap = JsonUtil.json2Object(newJson, new TypeReference<HashMap<String, Object>>() {
+        });
+        if (CollectionUtil.isEmpty(newMap)) {
+            return oldMap;
+        }
+
+        oldMap = flatMap(oldMap);
+        newMap = flatMap(newMap);
+
+        final Map<String, Object> finalNewMap = newMap;
+        return oldMap.entrySet().stream().filter(oldEntry -> !Objects.equals(oldEntry.getValue(), finalNewMap.get(oldEntry.getKey())))
+                .collect(TreeMap::new, (m, e) -> m.put(e.getKey(), e.getValue() + StringUtil.LINE + finalNewMap.get(e.getKey())), TreeMap::putAll);
     }
 
     private static Stream<Map.Entry<String, Object>> flatEntry(Map.Entry<String, Object> entry) {
