@@ -89,7 +89,12 @@ public class DiffUtil {
     public static Map<String, Object> diffJson(String oldJson, String newJson, List<String> ignoreFields) {
         List<String> ignoreFieldRegexes = CollectionUtil.emptyIfNull(ignoreFields).stream()
                 .filter(ignoreField -> !StringUtil.isEmpty(ignoreField))
-                .map(ignoreField -> "^" + ignoreField.replaceAll("\\.", "\\\\.").replace(NUMBER_REGEX, "\\d+") + ".*")
+                .map(ignoreField -> {
+                    if (ignoreField.contains(NUMBER_REGEX)) {
+                        return "^" + ignoreField.replaceAll("\\.", "\\\\.").replace(NUMBER_REGEX, "\\d+") + ".*";
+                    }
+                    return "^" + ignoreField + "$";
+                })
                 .collect(Collectors.toList());
 
         Map<String, Object> oldMap = JsonUtil.json2Object(oldJson, new TypeReference<HashMap<String, Object>>() {
