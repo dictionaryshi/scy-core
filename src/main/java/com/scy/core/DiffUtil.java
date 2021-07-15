@@ -87,7 +87,7 @@ public class DiffUtil {
     }
 
     public static Map<String, Object> diffJson(String oldJson, String newJson, List<String> ignoreFields) {
-        List<String> ignoreFieldGegexs = CollectionUtil.emptyIfNull(ignoreFields).stream()
+        List<String> ignoreFieldRegexes = CollectionUtil.emptyIfNull(ignoreFields).stream()
                 .filter(ignoreField -> !StringUtil.isEmpty(ignoreField))
                 .map(ignoreField -> "^" + ignoreField.replaceAll("\\.", "\\\\.").replace(NUMBER_REGEX, "\\d+") + ".*")
                 .collect(Collectors.toList());
@@ -109,7 +109,7 @@ public class DiffUtil {
 
         final Map<String, Object> finalNewMap = newMap;
         return oldMap.entrySet().stream()
-                .filter(oldEntry -> ignoreFieldGegexs.stream().noneMatch(ignoreFieldGegex -> oldEntry.getKey().matches(ignoreFieldGegex)))
+                .filter(oldEntry -> ignoreFieldRegexes.stream().noneMatch(ignoreFieldRegex -> oldEntry.getKey().matches(ignoreFieldRegex)))
                 .filter(oldEntry -> !Objects.equals(oldEntry.getValue(), finalNewMap.get(oldEntry.getKey())))
                 .collect(TreeMap::new, (m, e) -> m.put(e.getKey(), e.getValue() + StringUtil.LINE + finalNewMap.get(e.getKey())), TreeMap::putAll);
     }
