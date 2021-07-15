@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -20,6 +21,8 @@ import java.util.stream.Stream;
  */
 @Slf4j
 public class DiffUtil {
+
+    public static final String NUMBER_REGEX = "numberRegex";
 
     private DiffUtil() {
     }
@@ -83,7 +86,12 @@ public class DiffUtil {
                 .collect(TreeMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), TreeMap::putAll);
     }
 
-    public static Map<String, Object> diffJson(String oldJson, String newJson) {
+    public static Map<String, Object> diffJson(String oldJson, String newJson, List<String> ignoreFields) {
+        List<String> ignoreFieldGegexs = CollectionUtil.emptyIfNull(ignoreFields).stream()
+                .filter(ignoreField -> !StringUtil.isEmpty(ignoreField))
+                .map(ignoreField -> "^" + ignoreField.replaceAll("\\.", "\\\\.").replace(NUMBER_REGEX, "\\d+") + ".*")
+                .collect(Collectors.toList());
+
         Map<String, Object> oldMap = JsonUtil.json2Object(oldJson, new TypeReference<HashMap<String, Object>>() {
         });
         if (CollectionUtil.isEmpty(oldMap)) {
@@ -100,7 +108,9 @@ public class DiffUtil {
         newMap = flatMap(newMap);
 
         final Map<String, Object> finalNewMap = newMap;
-        return oldMap.entrySet().stream().filter(oldEntry -> !Objects.equals(oldEntry.getValue(), finalNewMap.get(oldEntry.getKey())))
+        return oldMap.entrySet().stream()
+                .filter(oldEntry -> ignoreFieldGegexs.stream().noneMatch(ignoreFieldGegex -> oldEntry.getKey().matches(ignoreFieldGegex)))
+                .filter(oldEntry -> !Objects.equals(oldEntry.getValue(), finalNewMap.get(oldEntry.getKey())))
                 .collect(TreeMap::new, (m, e) -> m.put(e.getKey(), e.getValue() + StringUtil.LINE + finalNewMap.get(e.getKey())), TreeMap::putAll);
     }
 
