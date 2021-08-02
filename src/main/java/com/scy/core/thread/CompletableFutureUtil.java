@@ -3,8 +3,10 @@ package com.scy.core.thread;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.*;
+import java.util.stream.Collectors;
 
 /**
  * @author : shichunyang
@@ -153,5 +155,10 @@ public class CompletableFutureUtil {
 
     public static <T> boolean cancel(CompletableFuture<T> completableFuture, boolean mayInterruptIfRunning) {
         return completableFuture.cancel(mayInterruptIfRunning);
+    }
+
+    public static <T> CompletableFuture<List<T>> mergeCompletableFuture(List<CompletableFuture<T>> futures) {
+        return CompletableFuture.allOf(futures.toArray(new CompletableFuture<?>[]{}))
+                .thenApply(v -> futures.stream().map(CompletableFuture::join).collect(Collectors.toList()));
     }
 }
