@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.OutputStream;
-import java.util.Random;
 
 /**
  * CaptchaUtil
@@ -41,23 +40,18 @@ public class CaptchaUtil {
 
     private static BufferedImage createCaptcha(int width, int height, String captchaText, int count) {
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics2D = bufferedImage.createGraphics();
 
-        Graphics2D graphics2D = (Graphics2D) bufferedImage.getGraphics();
+        bufferedImage = graphics2D.getDeviceConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+        graphics2D = bufferedImage.createGraphics();
+
+        graphics2D.setColor(Color.BLACK);
+
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        graphics2D.setColor(Color.GRAY);
-        graphics2D.fillRect(0, 0, width, height);
-
-        graphics2D.setColor(getRandomColor(200, 250));
-        graphics2D.fillRect(0, 0, width, height);
-
-        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
         int fontSize = height - 4;
-        Font font = new Font("Algerian", Font.ITALIC, fontSize);
+        Font font = new Font("微软雅黑", Font.PLAIN, fontSize);
         graphics2D.setFont(font);
-
-        graphics2D.setColor(getRandomColor(100, 160));
 
         char[] captchaTextChars = captchaText.toCharArray();
         for (int i = 0; i < count; i++) {
@@ -67,13 +61,5 @@ public class CaptchaUtil {
         graphics2D.dispose();
 
         return bufferedImage;
-    }
-
-    private static Color getRandomColor(int fc, int bc) {
-        Random random = RandomUtil.RANDOM;
-        int r = fc + random.nextInt(bc - fc);
-        int g = fc + random.nextInt(bc - fc);
-        int b = fc + random.nextInt(bc - fc);
-        return new Color(r, g, b);
     }
 }
