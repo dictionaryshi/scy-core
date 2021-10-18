@@ -39,18 +39,19 @@ public class CaptchaUtil {
     }
 
     private static BufferedImage createCaptcha(int width, int height, String captchaText, int count) {
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage originBufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D originGraphics2D = originBufferedImage.createGraphics();
+
+        BufferedImage bufferedImage = originGraphics2D.getDeviceConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
         Graphics2D graphics2D = bufferedImage.createGraphics();
 
-        bufferedImage = graphics2D.getDeviceConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
-        graphics2D = bufferedImage.createGraphics();
-
-        graphics2D.setColor(Color.BLACK);
+        graphics2D.setColor(Color.GRAY);
 
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         int fontSize = height - 4;
-        Font font = new Font("微软雅黑", Font.PLAIN, fontSize);
+        Font font = new Font("微软雅黑", Font.ITALIC, fontSize);
         graphics2D.setFont(font);
 
         char[] captchaTextChars = captchaText.toCharArray();
@@ -58,7 +59,13 @@ public class CaptchaUtil {
             graphics2D.drawChars(captchaTextChars, i, 1, (width / count) * i, (height / 2) + (fontSize / 2) - 4);
         }
 
+        // 释放资源
         graphics2D.dispose();
+        bufferedImage.getGraphics().dispose();
+
+        // 释放资源
+        originGraphics2D.dispose();
+        originBufferedImage.getGraphics().dispose();
 
         return bufferedImage;
     }
