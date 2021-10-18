@@ -23,10 +23,10 @@ public class CaptchaUtil {
     public static String getCaptcha(OutputStream out) {
         ImageIO.setUseCache(Boolean.FALSE);
 
-        int count = 5;
+        int count = 4;
         String captchaText = RandomUtil.getRandomText(count);
 
-        BufferedImage bufferedImage = createCaptcha(count * 21, 30, captchaText, count);
+        BufferedImage bufferedImage = createCaptcha(count * 24, 28, captchaText, count);
 
         try {
             ImageIO.write(bufferedImage, "png", out);
@@ -56,7 +56,7 @@ public class CaptchaUtil {
 
         char[] captchaTextChars = captchaText.toCharArray();
         for (int i = 0; i < count; i++) {
-            graphics2D.drawChars(captchaTextChars, i, 1, (width / count) * i, (height / 2) + (fontSize / 2) - 4);
+            graphics2D.drawChars(captchaTextChars, i, 1, (width / count) * i, (height / 2) + (fontSize / 2));
         }
 
         // 释放资源
