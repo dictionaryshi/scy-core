@@ -45,7 +45,7 @@ public class CaptchaUtil {
         BufferedImage bufferedImage = originGraphics2D.getDeviceConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
         Graphics2D graphics2D = bufferedImage.createGraphics();
 
-        graphics2D.setColor(Color.GRAY);
+        graphics2D.setColor(Color.BLACK);
 
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
