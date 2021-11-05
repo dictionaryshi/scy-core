@@ -4,10 +4,7 @@ import com.scy.core.CollectionUtil;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-import org.mybatis.generator.api.dom.java.Interface;
-import org.mybatis.generator.api.dom.java.Method;
-import org.mybatis.generator.api.dom.java.TopLevelClass;
+import org.mybatis.generator.api.dom.java.*;
 
 import java.util.List;
 import java.util.Set;
@@ -118,5 +115,44 @@ public class Plugin extends PluginAdapter {
     @Override
     public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable, ModelClassType modelClassType) {
         return Boolean.FALSE;
+    }
+
+    @Override
+    public boolean modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        PrimitiveTypeWrapper integerWrapper = FullyQualifiedJavaType.getIntInstance().getPrimitiveTypeWrapper();
+
+        Field offset = new Field("offset", integerWrapper);
+        offset.setVisibility(JavaVisibility.PRIVATE);
+        topLevelClass.addField(offset);
+
+        Method setOffset = new Method("setOffset");
+        setOffset.setVisibility(JavaVisibility.PUBLIC);
+        setOffset.addParameter(new Parameter(integerWrapper, "offset"));
+        setOffset.addBodyLine("this.offset = offset;");
+        topLevelClass.addMethod(setOffset);
+
+        Method getOffset = new Method("getOffset");
+        getOffset.setVisibility(JavaVisibility.PUBLIC);
+        getOffset.setReturnType(integerWrapper);
+        getOffset.addBodyLine("return offset;");
+        topLevelClass.addMethod(getOffset);
+
+        Field limit = new Field("limit", integerWrapper);
+        limit.setVisibility(JavaVisibility.PRIVATE);
+        topLevelClass.addField(limit);
+
+        Method setLimit = new Method("setLimit");
+        setLimit.setVisibility(JavaVisibility.PUBLIC);
+        setLimit.addParameter(new Parameter(integerWrapper, "limit"));
+        setLimit.addBodyLine("this.limit = limit;");
+        topLevelClass.addMethod(setLimit);
+
+        Method getLimit = new Method("getLimit");
+        getLimit.setVisibility(JavaVisibility.PUBLIC);
+        getLimit.setReturnType(integerWrapper);
+        getLimit.addBodyLine("return limit;");
+        topLevelClass.addMethod(getLimit);
+
+        return Boolean.TRUE;
     }
 }
