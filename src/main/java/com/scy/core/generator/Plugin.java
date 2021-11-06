@@ -155,4 +155,29 @@ public class Plugin extends PluginAdapter {
 
         return Boolean.TRUE;
     }
+
+    @Override
+    public boolean providerSelectByExampleWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        addLimit(method);
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public boolean providerSelectByExampleWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        addLimit(method);
+        return Boolean.TRUE;
+    }
+
+    private void addLimit(Method method) {
+        List<String> bodyLines = method.getBodyLines();
+
+        method.addBodyLine(bodyLines.size() - 1, "if (example != null && example.getLimit() != null) {");
+        method.addBodyLine(bodyLines.size() - 1, "if (example.getOffset() == null) {");
+        method.addBodyLine(bodyLines.size() - 1, "return sql.toString() + \" limit \" + example.getLimit();");
+        method.addBodyLine(bodyLines.size() - 1, "} else {");
+        method.addBodyLine(bodyLines.size() - 1, "return sql.toString() + \" limit \" + example.getOffset() + \", \" + example.getLimit();");
+        method.addBodyLine(bodyLines.size() - 1, "}");
+        method.addBodyLine(bodyLines.size() - 1, "}");
+        method.addBodyLine(bodyLines.size() - 1, "");
+    }
 }
