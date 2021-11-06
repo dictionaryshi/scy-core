@@ -34,7 +34,7 @@ public class PageParam {
 
 
     @ApiModelProperty(value = "查询开始行数", hidden = true, example = "0")
-    private int startRowNumber;
+    private int offset;
 
     @ApiModelProperty(value = "排序字段", hidden = true)
     private String orderField;
@@ -47,13 +47,8 @@ public class PageParam {
         this.limit = limit;
     }
 
-    public int getStartRowNumber() {
+    public int getOffset() {
         // (当前页码-1) * 每页读取长度
         return (this.page - 1) * limit;
-    }
-
-    public static String appendOrderAndLimit(String sql, PageParam pageParam) {
-        sql = sql + " order by " + pageParam.getOrderField() + " " + (pageParam.isDesc() ? "desc" : "asc");
-        return sql + " limit " + pageParam.getStartRowNumber() + ", " + pageParam.getLimit();
     }
 }
