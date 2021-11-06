@@ -36,12 +36,6 @@ public class PageParam {
     @ApiModelProperty(value = "查询开始行数", hidden = true, example = "0")
     private int offset;
 
-    @ApiModelProperty(value = "排序字段", hidden = true)
-    private String orderField;
-
-    @ApiModelProperty(value = "是否降序", hidden = true)
-    private boolean isDesc;
-
     public PageParam(int page, int limit) {
         this.page = page;
         this.limit = limit;
