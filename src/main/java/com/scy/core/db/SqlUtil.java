@@ -26,24 +26,24 @@ public class SqlUtil {
         List<String> fieldNames = Stream.of(declaredFields).map(Field::getName)
                 .filter(fieldName -> !CollectionUtil.emptyIfNull(excludeFields).contains(fieldName)).collect(Collectors.toList());
 
-        sb.append("<script>").append(SystemUtil.SYSTEM_LINE_BREAK);
-        sb.append("insert into ").append(table).append(StringUtil.SPACE).append(SystemUtil.SYSTEM_LINE_BREAK);
-        sb.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("<script>");
+        sb.append("insert into ").append(table);
+        sb.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
         fieldNames.forEach(
-                fieldName -> sb.append(StringUtil.humpToLine(fieldName)).append(StringUtil.COMMA).append(SystemUtil.SYSTEM_LINE_BREAK)
+                fieldName -> sb.append(StringUtil.humpToLine(fieldName)).append(StringUtil.COMMA)
         );
-        sb.append("</trim>").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("</trim>");
 
-        sb.append(" VALUES ").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("VALUES");
 
-        sb.append("<foreach collection=\"list\" item=\"entry\" separator=\",\">").append(SystemUtil.SYSTEM_LINE_BREAK);
-        sb.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("<foreach collection=\"list\" item=\"entry\" separator=\",\">");
+        sb.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
         fieldNames.forEach(
-                fieldName -> sb.append("#{").append("entry.").append(fieldName).append("}").append(StringUtil.COMMA).append(SystemUtil.SYSTEM_LINE_BREAK)
+                fieldName -> sb.append("#{").append("entry.").append(fieldName).append("}").append(StringUtil.COMMA)
         );
-        sb.append("</trim>").append(SystemUtil.SYSTEM_LINE_BREAK);
-        sb.append("</foreach>").append(SystemUtil.SYSTEM_LINE_BREAK);
-        sb.append("</script>").append(SystemUtil.SYSTEM_LINE_BREAK);
+        sb.append("</trim>");
+        sb.append("</foreach>");
+        sb.append("</script>");
         return sb.toString();
     }
 }
