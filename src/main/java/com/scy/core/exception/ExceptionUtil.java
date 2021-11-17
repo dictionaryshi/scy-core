@@ -18,15 +18,18 @@ public class ExceptionUtil {
     private ExceptionUtil() {
     }
 
-    public static String[] getExceptionMessages(Throwable throwable) {
-        return ExceptionUtils.getStackFrames(throwable);
-    }
-
     public static String getExceptionMessageWithTraceId(Throwable throwable) {
         StringBuilder sb = new StringBuilder();
-        String[] exceptionMessages = getExceptionMessages(throwable);
+        String[] exceptionMessages = ExceptionUtils.getStackFrames(throwable);
         String traceId = TraceUtil.getTraceId();
-        Stream.of(exceptionMessages).forEach(exception -> sb.append(traceId).append(StringUtil.SPACE).append(exception.trim()).append(SystemUtil.SYSTEM_LINE_BREAK));
+        Stream.of(exceptionMessages).forEach(exception -> sb.append(traceId).append(StringUtil.SPACE).append(exception).append(SystemUtil.SYSTEM_LINE_BREAK));
+        return sb.toString();
+    }
+
+    public static String getExceptionMessage(Throwable throwable) {
+        StringBuilder sb = new StringBuilder();
+        String[] exceptionMessages = ExceptionUtils.getStackFrames(throwable);
+        Stream.of(exceptionMessages).forEach(exception -> sb.append(exception).append(SystemUtil.SYSTEM_LINE_BREAK));
         return sb.toString();
     }
 }
