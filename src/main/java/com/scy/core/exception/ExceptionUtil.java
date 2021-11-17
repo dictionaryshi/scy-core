@@ -29,6 +29,7 @@ public class ExceptionUtil {
     public static String getExceptionMessage(Throwable throwable) {
         StringBuilder sb = new StringBuilder();
         String[] exceptionMessages = ExceptionUtils.getStackFrames(throwable);
+        sb.append(SystemUtil.SYSTEM_LINE_BREAK);
         Stream.of(exceptionMessages).forEach(exception -> sb.append(exception).append(SystemUtil.SYSTEM_LINE_BREAK));
         return sb.toString();
     }
