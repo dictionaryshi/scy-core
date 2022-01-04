@@ -5,9 +5,7 @@ import com.scy.core.ObjectUtil;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.core.spring.AutoConfigurationPackageUtil;
 import org.reflections.Reflections;
-import org.reflections.scanners.FieldAnnotationsScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.springframework.lang.Nullable;
@@ -41,7 +39,7 @@ public class ReflectionsUtil {
                 if (ObjectUtil.isNull(classReflections)) {
                     classReflections = new Reflections(new ConfigurationBuilder()
                             .setUrls(ClasspathHelper.forPackage(ALL_PACKAGE))
-                            .setScanners(new TypeAnnotationsScanner(), new SubTypesScanner()));
+                            .setScanners(Scanners.TypesAnnotated, Scanners.SubTypes));
                 }
             }
         }
@@ -51,7 +49,7 @@ public class ReflectionsUtil {
                 if (ObjectUtil.isNull(fieldReflections)) {
                     fieldReflections = new Reflections(new ConfigurationBuilder()
                             .setUrls(ClasspathHelper.forPackage(ALL_PACKAGE))
-                            .setScanners(new FieldAnnotationsScanner()));
+                            .setScanners(Scanners.FieldsAnnotated));
                 }
             }
         }
