@@ -154,6 +154,32 @@ public class JsonUtil {
         }
     }
 
+    public static byte[] writeValueAsBytes(Object object) {
+        if (Objects.isNull(object)) {
+            return null;
+        }
+
+        try {
+            return OBJECT_MAPPER.writeValueAsBytes(object);
+        } catch (Exception e) {
+            log.error(MessageUtil.format("writeValueAsBytes error", e, "object", object.toString()));
+            return null;
+        }
+    }
+
+    public static <T> T json2Object(byte[] bytes, TypeReference<T> typeReference) {
+        if (Objects.isNull(bytes)) {
+            return null;
+        }
+
+        try {
+            return OBJECT_MAPPER.readValue(bytes, typeReference);
+        } catch (Exception e) {
+            log.error(MessageUtil.format("json2Object error", e));
+            return null;
+        }
+    }
+
     private static JavaType getJavaType(Type type) {
         if (type instanceof ParameterizedType) {
             // 泛型
