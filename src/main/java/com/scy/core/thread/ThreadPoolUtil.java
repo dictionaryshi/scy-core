@@ -22,6 +22,8 @@ public class ThreadPoolUtil {
     private ThreadPoolUtil() {
     }
 
+    public static final ConcurrentHashMap<String, ThreadPoolExecutor> THREAD_POOLS = new ConcurrentHashMap<>();
+
     public static final String FORK_JOIN_POOL_CORE_SIZE = "java.util.concurrent.ForkJoinPool.common.parallelism";
 
     public static boolean parallelCheck(
@@ -76,6 +78,13 @@ public class ThreadPoolUtil {
                 (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject",
                         "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)))
         );
+
+        if (THREAD_POOLS.containsKey(poolName)) {
+            log.error(MessageUtil.format("线程池重复定义", "poolName", poolName));
+            return null;
+        }
+
+        THREAD_POOLS.putIfAbsent(poolName, transmittableThreadPoolExecutor);
 
         return transmittableThreadPoolExecutor;
     }
