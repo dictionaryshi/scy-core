@@ -130,6 +130,13 @@ public class ThreadPoolUtil {
                         "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)))
         );
 
+        if (THREAD_POOLS.containsKey(poolName)) {
+            log.error(MessageUtil.format("线程池重复定义", "poolName", poolName));
+            return null;
+        }
+
+        THREAD_POOLS.putIfAbsent(poolName, transmittableScheduledThreadPoolExecutor);
+
         return transmittableScheduledThreadPoolExecutor;
     }
 
