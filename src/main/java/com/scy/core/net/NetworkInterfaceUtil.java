@@ -7,9 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * NetworkInterfaceUtil
@@ -55,5 +57,14 @@ public class NetworkInterfaceUtil {
             return StringUtil.EMPTY;
         }
         return ips.get(0);
+    }
+
+    public static String getIp(InetSocketAddress inetSocketAddress) {
+        if (Objects.isNull(inetSocketAddress)) {
+            return StringUtil.EMPTY;
+        }
+
+        InetAddress address = inetSocketAddress.getAddress();
+        return address.getHostAddress();
     }
 }
