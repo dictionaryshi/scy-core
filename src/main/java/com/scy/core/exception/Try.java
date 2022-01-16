@@ -26,4 +26,12 @@ public class Try {
             return null;
         }
     }
+
+    public static void run(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Throwable e) {
+            log.error(MessageUtil.format("Try Catch", e));
+        }
+    }
 }
