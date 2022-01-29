@@ -7,6 +7,7 @@ import com.scy.core.format.DateUtil;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.Collection;
 import java.util.Date;
@@ -159,17 +160,7 @@ public class ObjectUtil {
         return defaultValue;
     }
 
-    public static boolean allNotNull(final Object... values) {
-        if (values == null) {
-            return false;
-        }
-
-        for (final Object val : values) {
-            if (val == null) {
-                return false;
-            }
-        }
-
-        return true;
+    public static boolean allNotNull(Object... values) {
+        return ObjectUtils.allNotNull(values);
     }
 }
