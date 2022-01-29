@@ -158,4 +158,18 @@ public class ObjectUtil {
 
         return defaultValue;
     }
+
+    public static boolean allNotNull(final Object... values) {
+        if (values == null) {
+            return false;
+        }
+
+        for (final Object val : values) {
+            if (val == null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

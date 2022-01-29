@@ -32,6 +32,10 @@ public class RandomUtil {
         return RandomUtils.nextLong(startInclusive, endExclusive);
     }
 
+    public static boolean nextBoolean() {
+        return RandomUtils.nextBoolean();
+    }
+
     public static String getRandomText(int count) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < count; i++) {
