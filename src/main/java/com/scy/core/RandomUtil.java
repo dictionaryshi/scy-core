@@ -1,9 +1,9 @@
 package com.scy.core;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.Validate;
 
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * RandomUtil
@@ -16,8 +16,6 @@ public class RandomUtil {
     private RandomUtil() {
     }
 
-    public static final Random RANDOM = new Random();
-
     public static final List<Character> RANDOM_CHARS = CollectionUtil.unmodifiableList(CollectionUtil.newArrayList(
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -25,15 +23,19 @@ public class RandomUtil {
     ));
 
     public static int nextInt(int startInclusive, int endExclusive) {
-        return RandomUtils.nextInt(startInclusive, endExclusive);
-    }
+        Validate.isTrue(endExclusive >= startInclusive,
+                "Start value must be smaller or equal to end value.");
+        Validate.isTrue(startInclusive >= 0, "Both range values must be non-negative.");
 
-    public static long nextLong(long startInclusive, long endExclusive) {
-        return RandomUtils.nextLong(startInclusive, endExclusive);
+        if (startInclusive == endExclusive) {
+            return startInclusive;
+        }
+
+        return startInclusive + ThreadLocalRandom.current().nextInt(endExclusive - startInclusive);
     }
 
     public static boolean nextBoolean() {
-        return RandomUtils.nextBoolean();
+        return ThreadLocalRandom.current().nextBoolean();
     }
 
     public static String getRandomText(int count) {
