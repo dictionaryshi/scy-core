@@ -161,4 +161,8 @@ public class NumberUtil {
     public static long yuanToFen(double yuan) {
         return multiply(yuan, MULTIPLIER).longValue();
     }
+
+    public static int modulo(long i, int target) {
+        return (int) abs(i % target);
+    }
 }
