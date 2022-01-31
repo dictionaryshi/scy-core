@@ -16,18 +16,11 @@ public class ThreadUtil {
     private ThreadUtil() {
     }
 
-    public static void quietSleep(long millis, boolean ignoreInterrupt) {
+    public static void quietSleep(long millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
             log.info(MessageUtil.format("quietSleep interrupt", e));
-            if (ignoreInterrupt) {
-                try {
-                    Thread.sleep(millis);
-                } catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
-                }
-            }
         }
     }
 }
