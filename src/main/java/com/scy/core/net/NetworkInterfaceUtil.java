@@ -5,6 +5,7 @@ import com.scy.core.StringUtil;
 import com.scy.core.format.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -21,6 +22,8 @@ import java.util.Objects;
  */
 @Slf4j
 public class NetworkInterfaceUtil {
+
+    private static String localIp;
 
     public static List<String> getIps() {
         List<String> ips = CollectionUtil.newArrayList();
@@ -44,7 +47,14 @@ public class NetworkInterfaceUtil {
                 if (inetAddress instanceof Inet6Address) {
                     continue;
                 }
-                ips.add(inetAddress.getHostAddress());
+
+                try {
+                    if (inetAddress.isReachable(100)) {
+                        ips.add(inetAddress.getHostAddress());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -52,11 +62,18 @@ public class NetworkInterfaceUtil {
     }
 
     public static String getIp() {
+        if (!StringUtil.isEmpty(localIp)) {
+            return localIp;
+        }
+
         List<String> ips = getIps();
         if (CollectionUtil.isEmpty(ips)) {
             return StringUtil.EMPTY;
         }
-        return ips.get(0);
+
+        localIp = ips.get(0);
+
+        return localIp;
     }
 
     public static String getIp(InetSocketAddress inetSocketAddress) {
