@@ -5,6 +5,7 @@ import com.scy.core.StringUtil;
 import com.scy.core.format.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -44,7 +45,14 @@ public class NetworkInterfaceUtil {
                 if (inetAddress instanceof Inet6Address) {
                     continue;
                 }
-                ips.add(inetAddress.getHostAddress());
+
+                try {
+                    if (inetAddress.isReachable(100)) {
+                        ips.add(inetAddress.getHostAddress());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
