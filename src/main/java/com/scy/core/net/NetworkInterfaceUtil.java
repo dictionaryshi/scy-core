@@ -23,6 +23,8 @@ import java.util.Objects;
 @Slf4j
 public class NetworkInterfaceUtil {
 
+    private static String localIp;
+
     public static List<String> getIps() {
         List<String> ips = CollectionUtil.newArrayList();
 
@@ -60,11 +62,18 @@ public class NetworkInterfaceUtil {
     }
 
     public static String getIp() {
+        if (!StringUtil.isEmpty(localIp)) {
+            return localIp;
+        }
+
         List<String> ips = getIps();
         if (CollectionUtil.isEmpty(ips)) {
             return StringUtil.EMPTY;
         }
-        return ips.get(0);
+
+        localIp = ips.get(0);
+
+        return localIp;
     }
 
     public static String getIp(InetSocketAddress inetSocketAddress) {
