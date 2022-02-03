@@ -4,6 +4,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
 
 /**
  * ClassUtil
@@ -17,6 +18,20 @@ public class ClassUtil {
     }
 
     public static final String UNCHECKED = "unchecked";
+
+    private static final HashMap<String, Class<?>> PRIM_CLASSES = new HashMap<>();
+
+    static {
+        PRIM_CLASSES.put(Boolean.TYPE.getName(), boolean.class);
+        PRIM_CLASSES.put(Byte.TYPE.getName(), byte.class);
+        PRIM_CLASSES.put(Character.TYPE.getName(), char.class);
+        PRIM_CLASSES.put(Short.TYPE.getName(), short.class);
+        PRIM_CLASSES.put(Integer.TYPE.getName(), int.class);
+        PRIM_CLASSES.put(Long.TYPE.getName(), long.class);
+        PRIM_CLASSES.put(Float.TYPE.getName(), float.class);
+        PRIM_CLASSES.put(Double.TYPE.getName(), double.class);
+        PRIM_CLASSES.put(Void.TYPE.getName(), void.class);
+    }
 
     /**
      * 获取类加载器
@@ -75,5 +90,18 @@ public class ClassUtil {
     @SuppressWarnings(UNCHECKED)
     public static <T> Class<T> getGenericType(Class<?> clazz) {
         return (Class<T>) ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    public static Class<?> resolveClass(String className) throws ClassNotFoundException {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            Class<?> cl = PRIM_CLASSES.get(className);
+            if (cl != null) {
+                return cl;
+            } else {
+                throw e;
+            }
+        }
     }
 }
