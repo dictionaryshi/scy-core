@@ -3,6 +3,7 @@ package com.scy.core.net;
 import com.scy.core.CollectionUtil;
 import com.scy.core.StringUtil;
 import com.scy.core.format.MessageUtil;
+import com.scy.core.model.UrlBO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -83,5 +84,35 @@ public class NetworkInterfaceUtil {
 
         InetAddress address = inetSocketAddress.getAddress();
         return address.getHostAddress();
+    }
+
+    public static String getIpPort(int port) {
+        String ip = getIp();
+        return getIpPort(ip, port);
+    }
+
+    public static String getIpPort(String ip, int port) {
+        if (Objects.isNull(ip)) {
+            return null;
+        }
+
+        return ip.concat(StringUtil.COLON).concat(String.valueOf(port));
+    }
+
+    public static UrlBO parseIpPort(String address) {
+        if (StringUtil.isEmpty(address)) {
+            return null;
+        }
+
+        String[] splitArr = address.split(StringUtil.COLON);
+
+        String host = splitArr[0];
+
+        int port = Integer.parseInt(splitArr[1]);
+
+        UrlBO urlBO = new UrlBO();
+        urlBO.setHost(host);
+        urlBO.setPort(port);
+        return urlBO;
     }
 }
