@@ -2,6 +2,7 @@ package com.scy.core.thread;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.scy.core.ObjectUtil;
+import com.scy.core.exception.BusinessException;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.model.ThreadMonitorBO;
 import lombok.extern.slf4j.Slf4j;
@@ -75,8 +76,9 @@ public class ThreadPoolUtil {
 
         TransmittableThreadPoolExecutor transmittableThreadPoolExecutor = new TransmittableThreadPoolExecutor(
                 corePoolSize, maximumPoolSize, 300, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueSize), threadFactory,
-                (runnable, threadPoolExecutor) -> log.error(MessageUtil.format("thread pool reject",
-                        "poolName", poolName, "thread", Thread.currentThread().getName(), "threadMonitor", getMonitorInfo(threadPoolExecutor)))
+                (runnable, threadPoolExecutor) -> {
+                    throw new BusinessException(MessageUtil.format("thread pool reject", "poolName", poolName, "threadMonitor", getMonitorInfo(threadPoolExecutor)));
+                }
         );
 
         if (THREAD_POOLS.containsKey(poolName)) {
