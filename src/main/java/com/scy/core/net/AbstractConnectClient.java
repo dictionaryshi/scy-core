@@ -54,7 +54,6 @@ public abstract class AbstractConnectClient {
 
             if (!ObjectUtil.isNull(connectClient)) {
                 connectClient.close();
-                CONNECT_CLIENT_MAP.remove(address);
             }
 
             AbstractConnectClient connectClientNew = connectClientClass.newInstance();
