@@ -16,9 +16,9 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public abstract class AbstractConnectClient {
 
-    private static final ConcurrentMap<String, AbstractConnectClient> CONNECT_CLIENT_MAP = new ConcurrentHashMap<>();
-
     private static final ConcurrentMap<String, Object> CONNECT_CLIENT_LOCK_MAP = new ConcurrentHashMap<>();
+
+    private static final ConcurrentMap<String, AbstractConnectClient> CONNECT_CLIENT_MAP = new ConcurrentHashMap<>();
 
     public abstract void init(String address) throws Exception;
 
@@ -28,7 +28,7 @@ public abstract class AbstractConnectClient {
 
     public abstract void send(Object data) throws Exception;
 
-    public static void asyncSend(String address, Object data, Class<? extends AbstractConnectClient> connectClientClass) throws Exception {
+    public static void asyncSend(String address, Class<? extends AbstractConnectClient> connectClientClass, Object data) throws Exception {
         AbstractConnectClient clientPool = AbstractConnectClient.getPool(address, connectClientClass);
 
         clientPool.send(data);
@@ -54,6 +54,7 @@ public abstract class AbstractConnectClient {
 
             if (!ObjectUtil.isNull(connectClient)) {
                 connectClient.close();
+                CONNECT_CLIENT_MAP.remove(address);
             }
 
             AbstractConnectClient connectClientNew = connectClientClass.newInstance();
