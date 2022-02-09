@@ -5,6 +5,7 @@ import com.scy.core.SystemUtil;
 import com.scy.core.trace.TraceUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -17,6 +18,9 @@ public class ExceptionUtil {
 
     private ExceptionUtil() {
     }
+
+    private static final Pattern IGNORABLE_ERROR_MESSAGE = Pattern.compile(
+            "^.*(?:connection.*(?:reset|closed|abort|broken)|broken.*pipe).*$", Pattern.CASE_INSENSITIVE);
 
     public static String getExceptionMessageWithTraceId(Throwable throwable) {
         StringBuilder sb = new StringBuilder();
@@ -32,5 +36,13 @@ public class ExceptionUtil {
         sb.append(SystemUtil.SYSTEM_LINE_BREAK);
         Stream.of(exceptionMessages).forEach(exception -> sb.append(exception).append(SystemUtil.SYSTEM_LINE_BREAK));
         return sb.toString();
+    }
+
+    public static boolean isIgnoreErrorMessage(String message) {
+        if (StringUtil.isEmpty(message)) {
+            return Boolean.FALSE;
+        }
+
+        return IGNORABLE_ERROR_MESSAGE.matcher(message).matches();
     }
 }
