@@ -1,11 +1,11 @@
 package com.scy.core.reflect;
 
 import com.scy.core.ObjectUtil;
+import com.scy.core.format.MessageUtil;
 import com.scy.core.model.MethodParam;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,7 +37,7 @@ public class MethodUtil {
 
             return method;
         } catch (Exception e) {
-            log.error(MessageFormat.format("getMethod error", e, "methodName", methodName));
+            log.error(MessageUtil.format("getMethod error", e, "methodName", methodName));
             return null;
         }
     }
