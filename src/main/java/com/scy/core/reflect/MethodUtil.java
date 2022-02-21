@@ -41,9 +41,4 @@ public class MethodUtil {
             return null;
         }
     }
-
-    public static void putMethod(Method method) {
-        MethodParam methodParam = new MethodParam(method.getDeclaringClass(), method.getName(), method.getParameterTypes());
-        METHOD_MAP.putIfAbsent(methodParam, method);
-    }
 }
