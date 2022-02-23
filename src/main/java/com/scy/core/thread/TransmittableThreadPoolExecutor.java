@@ -1,11 +1,12 @@
 package com.scy.core.thread;
 
-import com.alibaba.ttl.TtlRunnable;
+import com.google.common.collect.Maps;
 import com.scy.core.ObjectUtil;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -24,14 +25,15 @@ public class TransmittableThreadPoolExecutor extends ThreadPoolExecutor {
     }
 
     @Override
-    public void beforeExecute(Thread thread, Runnable runnable) {
-        TraceUtil.setMdcTraceId();
-        log.info(MessageUtil.format("thread start", "thread", Thread.currentThread().getName()));
-    }
-
-    @Override
     public void execute(Runnable runnable) {
-        super.execute(TtlRunnable.get(runnable));
+        Map<String, Object> threadLocalMap = Maps.newHashMap(ThreadLocalUtil.getThreadLocalMap());
+        super.execute(() -> {
+            ThreadLocalUtil.putAll(threadLocalMap);
+            TraceUtil.setMdcTraceId();
+
+            log.info(MessageUtil.format("thread start", "thread", Thread.currentThread().getName()));
+            runnable.run();
+        });
     }
 
     @Override
@@ -41,6 +43,6 @@ public class TransmittableThreadPoolExecutor extends ThreadPoolExecutor {
         } else {
             log.error(MessageUtil.format("thread error", throwable, "thread", Thread.currentThread().getName()));
         }
-        TraceUtil.clearMdc();
+        TraceUtil.clearTrace();
     }
 }
