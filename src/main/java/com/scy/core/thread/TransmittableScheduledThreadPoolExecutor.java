@@ -1,6 +1,6 @@
 package com.scy.core.thread;
 
-import com.alibaba.ttl.TtlRunnable;
+import com.scy.core.ObjectUtil;
 import com.scy.core.UUIDUtil;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.trace.TraceUtil;
@@ -30,13 +30,17 @@ public class TransmittableScheduledThreadPoolExecutor extends ScheduledThreadPoo
     }
 
     @Override
-    public void execute(Runnable runnable) {
-        super.execute(TtlRunnable.get(runnable));
+    public void execute(Runnable command) {
+        super.execute(command);
     }
 
     @Override
     public void afterExecute(Runnable runnable, Throwable throwable) {
-        log.info(MessageUtil.format("thread end", "thread", Thread.currentThread().getName()));
+        if (ObjectUtil.isNull(throwable)) {
+            log.info(MessageUtil.format("thread end", "thread", Thread.currentThread().getName()));
+        } else {
+            log.error(MessageUtil.format("thread error", throwable, "thread", Thread.currentThread().getName()));
+        }
         TraceUtil.clearTrace();
     }
 }
