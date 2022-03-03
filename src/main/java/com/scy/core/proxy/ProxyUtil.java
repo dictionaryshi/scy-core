@@ -19,6 +19,6 @@ public class ProxyUtil {
 
     @SuppressWarnings(ClassUtil.UNCHECKED)
     public static <T> T newProxyInstance(Class<T> interfaceClass, InvocationHandler invocationHandler) {
-        return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, invocationHandler);
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{interfaceClass}, invocationHandler);
     }
 }
