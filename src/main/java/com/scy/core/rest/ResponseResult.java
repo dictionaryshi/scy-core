@@ -37,8 +37,8 @@ public class ResponseResult<T> implements Serializable {
     @ApiModelProperty(value = "响应数据")
     private T data;
 
-    @ApiModelProperty(value = "rpc 任务", hidden = true)
-    private Future<T> future;
+    @ApiModelProperty(value = "异步响应结果", hidden = true)
+    private Future<ResponseResult<T>> responseResultFuture;
 
     private ResponseResult(int code, String message, T data) {
         this.code = code;
