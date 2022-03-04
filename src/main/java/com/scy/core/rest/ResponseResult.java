@@ -6,9 +6,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.concurrent.Future;
 
 /**
  * ResponseResult
@@ -19,6 +21,7 @@ import java.io.Serializable;
 @ApiModel("响应结果")
 @NoArgsConstructor
 @Getter
+@Setter
 @ToString
 public class ResponseResult<T> implements Serializable {
 
@@ -33,6 +36,9 @@ public class ResponseResult<T> implements Serializable {
 
     @ApiModelProperty(value = "响应数据")
     private T data;
+
+    @ApiModelProperty(value = "rpc 任务", hidden = true)
+    private Future<T> future;
 
     private ResponseResult(int code, String message, T data) {
         this.code = code;
