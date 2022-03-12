@@ -1,9 +1,14 @@
 package com.scy.core;
 
+import com.scy.core.format.DateUtil;
 import com.scy.core.format.NumberUtil;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author : shichunyang
@@ -14,9 +19,26 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Route {
 
-    public static <T> T routeLoop(List<T> list, AtomicLong counter) {
-        if (CollectionUtil.isEmpty(list)) {
+    private static final ConcurrentMap<String, AtomicInteger> COUNTER_MAP = new ConcurrentHashMap<>();
+
+    private static long cacheValidTime = 0;
+
+    public static <T> T routeLoop(String serviceKey, TreeSet<T> set) {
+        if (CollectionUtil.isEmpty(set)) {
             return null;
+        }
+
+        List<T> list = new ArrayList<>(set);
+
+        if (System.currentTimeMillis() > cacheValidTime) {
+            COUNTER_MAP.clear();
+            cacheValidTime = System.currentTimeMillis() + DateUtil.DAY;
+        }
+
+        AtomicInteger counter = COUNTER_MAP.get(serviceKey);
+        if (ObjectUtil.isNull(counter) || counter.get() > 100_0000) {
+            counter = new AtomicInteger(RandomUtil.nextInt(0, list.size()));
+            COUNTER_MAP.put(serviceKey, counter);
         }
 
         int index = NumberUtil.modulo(counter.getAndIncrement(), list.size());
@@ -24,10 +46,12 @@ public class Route {
         return list.get(index);
     }
 
-    public static <T> T routeRandom(List<T> list) {
-        if (CollectionUtil.isEmpty(list)) {
+    public static <T> T routeRandom(TreeSet<T> set) {
+        if (CollectionUtil.isEmpty(set)) {
             return null;
         }
+
+        List<T> list = new ArrayList<>(set);
 
         int index = RandomUtil.nextInt(0, list.size());
 
