@@ -38,7 +38,6 @@ public class Route {
         AtomicInteger counter = COUNTER_MAP.get(serviceKey);
         if (ObjectUtil.isNull(counter) || counter.get() > 100_0000) {
             counter = new AtomicInteger(RandomUtil.nextInt(0, list.size()));
-        } else {
             COUNTER_MAP.put(serviceKey, counter);
         }
 
