@@ -9,6 +9,7 @@ import com.scy.core.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 
+import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -162,5 +163,34 @@ public class ObjectUtil {
 
     public static boolean allNotNull(Object... values) {
         return ObjectUtils.allNotNull(values);
+    }
+
+    public static long hash(String str) {
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+        } catch (Exception e) {
+            throw new BusinessException("MD5 not supported", e);
+        }
+
+        messageDigest.reset();
+
+        byte[] strBytes;
+        try {
+            strBytes = str.getBytes(SystemUtil.CHARSET_UTF_8_STR);
+        } catch (Exception e) {
+            throw new BusinessException(MessageUtil.format("str encode error", e, "str", str));
+        }
+
+        messageDigest.update(strBytes);
+
+        byte[] digest = messageDigest.digest();
+
+        long hashCode = ((long) (digest[3] & 0xFF) << 24)
+                | ((long) (digest[2] & 0xFF) << 16)
+                | ((long) (digest[1] & 0xFF) << 8)
+                | (digest[0] & 0xFF);
+
+        return hashCode & 0xFFFFFFFFL;
     }
 }
