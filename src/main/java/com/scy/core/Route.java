@@ -58,7 +58,7 @@ public class Route {
         return list.get(index);
     }
 
-    public static <T> T routeConsistentHash(String serviceKey, TreeSet<T> set) {
+    public static <T> T routeConsistentHash(String clientKey, TreeSet<T> set) {
         if (CollectionUtil.isEmpty(set)) {
             return null;
         }
@@ -72,7 +72,7 @@ public class Route {
             }
         });
 
-        long serviceKeyHash = ObjectUtil.hash(serviceKey);
+        long serviceKeyHash = ObjectUtil.hash(clientKey);
 
         SortedMap<Long, T> tailMap = nodeMap.tailMap(serviceKeyHash);
         if (!tailMap.isEmpty()) {
