@@ -13,7 +13,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Set;
 
 /**
@@ -87,5 +89,44 @@ public class ReflectionsUtil {
     @Nullable
     public static Object getField(Class<?> targetClass, String name) {
         return ReflectionTestUtils.getField(targetClass, name);
+    }
+
+    public static <T> Constructor<T> accessibleConstructor(Class<T> clazz, Class<?>... parameterTypes) throws NoSuchMethodException {
+        return ReflectionUtils.accessibleConstructor(clazz, parameterTypes);
+    }
+
+    @Nullable
+    public static Method findMethod(Class<?> clazz, String name, @Nullable Class<?>... paramTypes) {
+        return ReflectionUtils.findMethod(clazz, name, paramTypes);
+    }
+
+    @Nullable
+    public static Object invokeMethod(Method method, @Nullable Object target, @Nullable Object... args) {
+        return ReflectionUtils.invokeMethod(method, target, args);
+    }
+
+    public static boolean declaresException(Method method, Class<?> exceptionType) {
+        return ReflectionUtils.declaresException(method, exceptionType);
+    }
+
+    public static void doWithMethods(Class<?> clazz, ReflectionUtils.MethodCallback methodCallback, @Nullable ReflectionUtils.MethodFilter methodFilter) {
+        ReflectionUtils.doWithMethods(clazz, methodCallback, methodFilter);
+    }
+
+    public static boolean isObjectMethod(@Nullable Method method) {
+        return ReflectionUtils.isObjectMethod(method);
+    }
+
+    public static void makeAccessible(Method method) {
+        ReflectionUtils.makeAccessible(method);
+    }
+
+    @Nullable
+    public static Field findField(Class<?> clazz, @Nullable String name, @Nullable Class<?> type) {
+        return ReflectionUtils.findField(clazz, name, type);
+    }
+
+    public static void makeAccessible(Field field) {
+        ReflectionUtils.makeAccessible(field);
     }
 }
