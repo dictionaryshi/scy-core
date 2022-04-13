@@ -1,5 +1,6 @@
 package com.scy.core.net;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.scy.core.*;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.json.JsonUtil;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * HttpUtil
@@ -85,7 +87,7 @@ public class HttpUtil {
         return httpUrlConnection;
     }
 
-    public static String httpRequest(HttpParam httpParam) {
+    public static <T> T httpRequest(HttpParam httpParam, TypeReference<T> typeReference) {
         HttpURLConnection httpUrlConnection = null;
 
         OutputStream outputStream = null;
@@ -108,10 +110,10 @@ public class HttpUtil {
 
             httpParam.setHttpUrlConnection(httpUrlConnection);
 
-            return parseHttpResult(httpParam);
+            return parseHttpResult(httpParam, typeReference);
         } catch (Throwable e) {
             log.error(MessageUtil.format("httpRequest error", e, "requestUrl", httpParam.getRequestUrl(), "requestBody", httpParam.getRequestBody()));
-            return StringUtil.EMPTY;
+            return null;
         } finally {
             if (outputStream != null) {
                 try {
@@ -128,13 +130,13 @@ public class HttpUtil {
         }
     }
 
-    private static String parseHttpResult(HttpParam httpParam) throws Throwable {
-        String result;
+    private static <T> T parseHttpResult(HttpParam httpParam, TypeReference<T> typeReference) throws Throwable {
+        T result;
         int responseCode = httpParam.getHttpUrlConnection().getResponseCode();
         try (InputStream inputStream = httpParam.getHttpUrlConnection().getInputStream()) {
             Map<String, List<String>> responseHeaders = new HashMap<>(httpParam.getHttpUrlConnection().getHeaderFields());
             responseHeaders.remove(null);
-            result = new String(IOUtil.toByteArray(inputStream), httpParam.getHttpOptions().getResponseCharset());
+            result = JsonUtil.json2Object(inputStream, typeReference);
             long endTime = System.currentTimeMillis();
             log.info(MessageUtil.format("parseHttpResult",
                     "requestUrl", httpParam.getRequestUrl(), "requestBody", httpParam.getRequestBody(), "responseCode", responseCode,
@@ -143,7 +145,7 @@ public class HttpUtil {
         return result;
     }
 
-    public static String get(String requestUrl, Map<String, Object> params, HttpOptions httpOptions) {
+    public static <T> T get(String requestUrl, Map<String, Object> params, TypeReference<T> typeReference, HttpOptions httpOptions) {
         String requestParam = StringUtil.EMPTY;
         if (!CollectionUtil.isEmpty(params)) {
             requestParam = StringUtil.QUESTION + CollectionUtil.map2Str(params, Boolean.TRUE);
@@ -153,29 +155,29 @@ public class HttpUtil {
         httpParam.setRequestMethod(GET);
         httpParam.setRequestBody(null);
         httpParam.setHttpOptions(httpOptions);
-        String result = HttpUtil.httpRequest(httpParam);
+        T result = HttpUtil.httpRequest(httpParam, typeReference);
         if (httpOptions.getRetry() <= 0) {
             return result;
         }
-        if (!StringUtil.isEmpty(result)) {
+        if (Objects.nonNull(result)) {
             return result;
         }
-        return HttpUtil.httpRequest(httpParam);
+        return HttpUtil.httpRequest(httpParam, typeReference);
     }
 
-    public static String post(String requestUrl, Map<String, Object> params, HttpOptions options) {
-        return request(requestUrl, POST, params, options);
+    public static <T> T post(String requestUrl, Map<String, Object> params, TypeReference<T> typeReference, HttpOptions options) {
+        return request(requestUrl, POST, params, typeReference, options);
     }
 
-    public static String put(String requestUrl, Map<String, Object> params, HttpOptions options) {
-        return request(requestUrl, PUT, params, options);
+    public static <T> T put(String requestUrl, Map<String, Object> params, TypeReference<T> typeReference, HttpOptions options) {
+        return request(requestUrl, PUT, params, typeReference, options);
     }
 
-    public static String delete(String requestUrl, Map<String, Object> params, HttpOptions options) {
-        return request(requestUrl, DELETE, params, options);
+    public static <T> T delete(String requestUrl, Map<String, Object> params, TypeReference<T> typeReference, HttpOptions options) {
+        return request(requestUrl, DELETE, params, typeReference, options);
     }
 
-    private static String request(String requestUrl, String requestMethod, Map<String, Object> params, HttpOptions httpOptions) {
+    private static <T> T request(String requestUrl, String requestMethod, Map<String, Object> params, TypeReference<T> typeReference, HttpOptions httpOptions) {
         HttpParam httpParam = new HttpParam();
         httpParam.setRequestUrl(requestUrl);
         httpParam.setRequestMethod(requestMethod);
@@ -189,10 +191,10 @@ public class HttpUtil {
         }
         httpParam.setRequestBody(requestBody);
         httpParam.setHttpOptions(httpOptions);
-        return HttpUtil.httpRequest(httpParam);
+        return HttpUtil.httpRequest(httpParam, typeReference);
     }
 
-    public static String upload(HttpParam httpParam) {
+    public static <T> T upload(HttpParam httpParam, TypeReference<T> typeReference) {
         HttpURLConnection httpUrlConnection = null;
 
         OutputStream outputStream = null;
@@ -221,7 +223,7 @@ public class HttpUtil {
                         return;
                     }
                     sb.append(BOUNDARY_SPLIT).append(boundary).append(StringUtil.CRLF);
-                    sb.append("Content-Disposition: form-data; name=\"" + name + "\"").append(StringUtil.CRLF).append(StringUtil.CRLF);
+                    sb.append("Content-Disposition: form-data; name=\"").append(name).append("\"").append(StringUtil.CRLF).append(StringUtil.CRLF);
                     sb.append(data).append(StringUtil.CRLF);
                 });
                 outputStream.write(sb.toString().getBytes());
@@ -230,7 +232,7 @@ public class HttpUtil {
             if (!ObjectUtil.isNull(httpParam.getFileBytes())) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(BOUNDARY_SPLIT).append(boundary).append(StringUtil.CRLF);
-                sb.append("Content-Disposition: form-data; name=\"" + httpParam.getFileParamName() + "\"; filename=\"" + httpParam.getFileName() + "\";").append(StringUtil.CRLF).append(StringUtil.CRLF);
+                sb.append("Content-Disposition: form-data; name=\"").append(httpParam.getFileParamName()).append("\"; filename=\"").append(httpParam.getFileName()).append("\";").append(StringUtil.CRLF).append(StringUtil.CRLF);
                 outputStream.write(sb.toString().getBytes());
                 outputStream.write(httpParam.getFileBytes());
             }
@@ -240,10 +242,10 @@ public class HttpUtil {
 
             httpParam.setHttpUrlConnection(httpUrlConnection);
 
-            return parseHttpResult(httpParam);
+            return parseHttpResult(httpParam, typeReference);
         } catch (Throwable e) {
             log.error(MessageUtil.format("upload error", e, "requestUrl", httpParam.getRequestUrl()));
-            return StringUtil.EMPTY;
+            return null;
         } finally {
             if (outputStream != null) {
                 try {
