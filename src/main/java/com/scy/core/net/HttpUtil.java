@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.scy.core.*;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.json.JsonUtil;
+import com.scy.core.reflect.ClassUtil;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.core.trace.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -130,13 +132,19 @@ public class HttpUtil {
         }
     }
 
+    @SuppressWarnings(ClassUtil.UNCHECKED)
     private static <T> T parseHttpResult(HttpParam httpParam, TypeReference<T> typeReference) throws Throwable {
         T result;
         int responseCode = httpParam.getHttpUrlConnection().getResponseCode();
         try (InputStream inputStream = httpParam.getHttpUrlConnection().getInputStream()) {
             Map<String, List<String>> responseHeaders = new HashMap<>(httpParam.getHttpUrlConnection().getHeaderFields());
             responseHeaders.remove(null);
-            result = JsonUtil.json2Object(inputStream, typeReference);
+            Type type = typeReference.getType();
+            if (Objects.equals(type, String.class)) {
+                result = (T) new String(IOUtil.toByteArray(inputStream), httpParam.getHttpOptions().getResponseCharset());
+            } else {
+                result = JsonUtil.json2Object(inputStream, typeReference);
+            }
             long endTime = System.currentTimeMillis();
             log.info(MessageUtil.format("parseHttpResult",
                     "requestUrl", httpParam.getRequestUrl(), "requestBody", httpParam.getRequestBody(), "responseCode", responseCode,
