@@ -12,6 +12,7 @@ import com.scy.core.format.MessageUtil;
 import com.scy.core.reflect.ClassUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -174,6 +175,19 @@ public class JsonUtil {
 
         try {
             return OBJECT_MAPPER.readValue(bytes, typeReference);
+        } catch (Exception e) {
+            log.error(MessageUtil.format("json2Object error", e));
+            return null;
+        }
+    }
+
+    public static <T> T json2Object(InputStream inputStream, TypeReference<T> typeReference) {
+        if (Objects.isNull(inputStream)) {
+            return null;
+        }
+
+        try {
+            return OBJECT_MAPPER.readValue(inputStream, typeReference);
         } catch (Exception e) {
             log.error(MessageUtil.format("json2Object error", e));
             return null;
