@@ -26,7 +26,7 @@ public class TransmittableScheduledThreadPoolExecutor extends ScheduledThreadPoo
     @Override
     public void beforeExecute(Thread thread, Runnable runnable) {
         TraceUtil.setTraceId(UUIDUtil.uuid());
-        log.info(MessageUtil.format("thread start", "thread", Thread.currentThread().getName()));
+        log.info(MessageUtil.format("thread start"));
     }
 
     @Override
@@ -37,9 +37,9 @@ public class TransmittableScheduledThreadPoolExecutor extends ScheduledThreadPoo
     @Override
     public void afterExecute(Runnable runnable, Throwable throwable) {
         if (ObjectUtil.isNull(throwable)) {
-            log.info(MessageUtil.format("thread end", "thread", Thread.currentThread().getName()));
+            log.info(MessageUtil.format("thread end"));
         } else {
-            log.error(MessageUtil.format("thread error", throwable, "thread", Thread.currentThread().getName()));
+            log.error(MessageUtil.format("thread error", throwable));
         }
         TraceUtil.clearTrace();
     }
