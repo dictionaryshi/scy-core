@@ -56,4 +56,26 @@ public class SocketUtil {
             }
         }
     }
+
+    public static int findAvailablePort(int defaultPort) {
+        int portTmp = defaultPort;
+        while (portTmp < 65535) {
+            if (!isPortUsed(portTmp)) {
+                return portTmp;
+            } else {
+                portTmp++;
+            }
+        }
+
+        portTmp = defaultPort - 1;
+        while (portTmp > 0) {
+            if (!isPortUsed(portTmp)) {
+                return portTmp;
+            } else {
+                portTmp--;
+            }
+        }
+
+        return 0;
+    }
 }
