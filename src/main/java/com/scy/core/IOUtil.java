@@ -1,5 +1,6 @@
 package com.scy.core;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -56,5 +57,37 @@ public class IOUtil {
             return CollectionUtil.emptyList();
         }
         return lines.stream().filter(line -> !StringUtil.isEmpty(line)).map(String::trim).collect(Collectors.toList());
+    }
+
+    public static boolean deleteQuietly(File file) {
+        return FileUtils.deleteQuietly(file);
+    }
+
+    public static File getUserDirectory() {
+        return FileUtils.getUserDirectory();
+    }
+
+    public static File getFile(File directory, String... names) {
+        return FileUtils.getFile(directory, names);
+    }
+
+    public static File getFile(String... names) {
+        return FileUtils.getFile(names);
+    }
+
+    public static long lastModified(File file) throws IOException {
+        return FileUtils.lastModified(file);
+    }
+
+    public static String readFileToString(File file, String charsetName) throws IOException {
+        return FileUtils.readFileToString(file, charsetName);
+    }
+
+    public static List<String> readLines(File file, String charsetName) throws IOException {
+        return trim(FileUtils.readLines(file, charsetName));
+    }
+
+    public static void writeStringToFile(File file, String data, String charsetName, boolean append) throws IOException {
+        FileUtils.writeStringToFile(file, data, charsetName, append);
     }
 }
