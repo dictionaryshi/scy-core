@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,5 +90,9 @@ public class IOUtil {
 
     public static void writeStringToFile(File file, String data, String charsetName, boolean append) throws IOException {
         FileUtils.writeStringToFile(file, data, charsetName, append);
+    }
+
+    public static void writeLines(File file, String charsetName, Collection<?> lines, boolean append) throws IOException {
+        FileUtils.writeLines(file, charsetName, lines, append);
     }
 }
