@@ -37,9 +37,10 @@ public class SpringInjectUtil {
             }
 
             Object fieldBean = null;
-            if (AnnotationUtils.getAnnotation(field, Resource.class) != null) {
+
+            Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
+            if (Objects.nonNull(resource)) {
                 try {
-                    Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
                     if (!StringUtil.isEmpty(resource.name())) {
                         fieldBean = applicationContext.getBean(resource.name());
                     } else {
@@ -52,7 +53,7 @@ public class SpringInjectUtil {
                 if (Objects.isNull(fieldBean)) {
                     fieldBean = applicationContext.getBean(field.getType());
                 }
-            } else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
+            } else if (Objects.nonNull(AnnotationUtils.getAnnotation(field, Autowired.class))) {
                 Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class);
                 if (Objects.nonNull(qualifier) && !StringUtil.isEmpty(qualifier.value())) {
                     fieldBean = applicationContext.getBean(qualifier.value());
