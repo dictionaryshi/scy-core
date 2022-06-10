@@ -3,6 +3,7 @@ package com.scy.core;
 import com.scy.core.encode.Md5Util;
 import com.scy.core.format.MessageUtil;
 import com.scy.core.reflect.ClassUtil;
+import com.scy.core.spring.SpringInjectUtil;
 import groovy.lang.GroovyClassLoader;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +41,7 @@ public class GroovyUtil {
             Object object = OBJECT_CACHE.get(md5Str);
             if (Objects.isNull(object)) {
                 object = clazz.newInstance();
+                SpringInjectUtil.injectService(object);
                 OBJECT_CACHE.putIfAbsent(md5Str, object);
             }
 
