@@ -8,6 +8,7 @@ import com.scy.core.model.ThreadMonitorBO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -70,6 +71,11 @@ public class ThreadPoolUtil {
             int maximumPoolSize,
             int queueSize
     ) {
+        ThreadPoolExecutor threadPool = THREAD_POOLS.get(poolName);
+        if (Objects.nonNull(threadPool)) {
+            return threadPool;
+        }
+
         ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat(poolName + "-thread-pool-%d")
                 .build();
@@ -80,11 +86,6 @@ public class ThreadPoolUtil {
                     throw new BusinessException(MessageUtil.format("thread pool reject", "poolName", poolName, "threadMonitor", getMonitorInfo(threadPoolExecutor)));
                 }
         );
-
-        if (THREAD_POOLS.containsKey(poolName)) {
-            log.error(MessageUtil.format("线程池重复定义", "poolName", poolName));
-            return null;
-        }
 
         THREAD_POOLS.putIfAbsent(poolName, transmittableThreadPoolExecutor);
 
