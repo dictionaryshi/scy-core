@@ -22,11 +22,6 @@ public class Unit {
 
     private String desc;
 
-    private String poolName;
-    private Integer corePoolSize;
-    private Integer maxPoolSize;
-    private Integer queueSize;
-
     private String className;
 
     private String methodName;
