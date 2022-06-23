@@ -2,7 +2,6 @@ package com.scy.core.thread;
 
 import com.scy.core.CollectionUtil;
 import com.scy.core.ObjectUtil;
-import com.scy.core.enums.ResponseCodeEnum;
 import com.scy.core.reflect.ClassUtil;
 import com.scy.core.reflect.MethodUtil;
 import com.scy.core.spring.ApplicationContextUtil;
@@ -53,20 +52,15 @@ public class UnitManager {
     }
 
     private static void run(Unit unit, Object object) {
-        int retry = unit.getRetry() + 1;
-        for (int i = 0; i < retry; i++) {
-            try {
-                Object bean = ApplicationContextUtil.getBean(ClassUtil.resolveClass(unit.getClassName()));
-                Method method = MethodUtil.getMethod(bean.getClass(), unit.getMethodName(), ClassUtil.resolveClass(unit.getParameterTypes()));
-                method.invoke(bean, object);
+        try {
+            Object bean = ApplicationContextUtil.getBean(ClassUtil.resolveClass(unit.getClassName()));
+            Method method = MethodUtil.getMethod(bean.getClass(), unit.getMethodName(), ClassUtil.resolveClass(unit.getParameterTypes()));
+            method.invoke(bean, object);
 
-                unit.setStatus(Boolean.TRUE);
-                unit.setCode(ResponseCodeEnum.SUCCESS.getCode());
-            } catch (Exception e) {
-                unit.setStatus(Boolean.FALSE);
-                unit.setCode(ResponseCodeEnum.SYSTEM_EXCEPTION.getCode());
-                unit.setThrowable(e);
-            }
+            unit.setStatus(Boolean.TRUE);
+        } catch (Exception e) {
+            unit.setStatus(Boolean.FALSE);
+            unit.setThrowable(e);
         }
     }
 }
