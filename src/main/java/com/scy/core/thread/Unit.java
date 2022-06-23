@@ -23,8 +23,8 @@ public class Unit {
     private String desc;
 
     private String poolName;
-    private Integer coreSize;
-    private Integer maxSize;
+    private Integer corePoolSize;
+    private Integer maxPoolSize;
     private Integer queueSize;
 
     private String className;
@@ -32,6 +32,8 @@ public class Unit {
     private String methodName;
 
     private String[] parameterTypes;
+
+    private int retry = 0;
 
     private boolean status;
 
