@@ -31,8 +31,10 @@ public class UnitManager {
 
         units.sort(Comparator.comparingInt(Unit::getPriority));
 
-        units.forEach(unit -> ThreadPoolUtil.getThreadPool(unit.getPoolName(),
-                unit.getCorePoolSize(), unit.getMaxPoolSize(), unit.getQueueSize()));
+        units.stream()
+                .filter(unit -> !StringUtil.isEmpty(unit.getPoolName()))
+                .forEach(unit -> ThreadPoolUtil.getThreadPool(unit.getPoolName(),
+                        unit.getCorePoolSize(), unit.getMaxPoolSize(), unit.getQueueSize()));
 
         List<CompletableFuture<Void>> taskFutures = units.stream().map(unit -> {
             if (StringUtil.isEmpty(unit.getPoolName())) {
