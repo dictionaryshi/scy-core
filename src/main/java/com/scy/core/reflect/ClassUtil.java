@@ -5,6 +5,8 @@ import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ClassUtil
@@ -18,6 +20,8 @@ public class ClassUtil {
     }
 
     public static final String UNCHECKED = "unchecked";
+
+    private static final ConcurrentHashMap<String, Class<?>> CLASS_MAP = new ConcurrentHashMap<>();
 
     private static final HashMap<String, Class<?>> PRIM_CLASSES = new HashMap<>();
 
@@ -93,15 +97,30 @@ public class ClassUtil {
     }
 
     public static Class<?> resolveClass(String className) throws ClassNotFoundException {
+        Class<?> clazz = CLASS_MAP.get(className);
+        if (Objects.nonNull(clazz)) {
+            return clazz;
+        }
+
         try {
-            return Class.forName(className);
+            clazz = Class.forName(className);
         } catch (ClassNotFoundException e) {
-            Class<?> cl = PRIM_CLASSES.get(className);
-            if (cl != null) {
-                return cl;
-            } else {
+            clazz = PRIM_CLASSES.get(className);
+            if (Objects.isNull(clazz)) {
                 throw e;
             }
         }
+
+        CLASS_MAP.put(className, clazz);
+
+        return clazz;
+    }
+
+    public static Class<?>[] resolveClass(String[] parameterTypes) throws ClassNotFoundException {
+        Class<?>[] paramTypes = new Class[parameterTypes.length];
+        for (int i = 0; i < parameterTypes.length; i++) {
+            paramTypes[i] = ClassUtil.resolveClass(parameterTypes[i]);
+        }
+        return paramTypes;
     }
 }
