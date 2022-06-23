@@ -28,11 +28,7 @@ public class Unit {
 
     private String[] parameterTypes;
 
-    private int retry = 0;
-
     private boolean status;
-
-    private int code = -1;
 
     private Throwable throwable;
 }
