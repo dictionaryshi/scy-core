@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 /**
  * @author : shichunyang
@@ -96,5 +97,13 @@ public class Route {
         }
 
         return nodeMap.firstEntry().getValue();
+    }
+
+    public static <T> T busyOrFailSkip(TreeSet<T> set, Predicate<T> predicate) {
+        if (CollectionUtil.isEmpty(set)) {
+            return null;
+        }
+
+        return set.stream().filter(predicate).filter(Objects::nonNull).findFirst().orElse(null);
     }
 }
