@@ -2,6 +2,7 @@ package com.scy.core;
 
 import com.scy.core.format.DateUtil;
 import com.scy.core.format.NumberUtil;
+import com.scy.core.util.LruCache;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +18,8 @@ import java.util.function.Predicate;
  * Desc    : Route
  */
 public class Route {
+
+    private static final ConcurrentMap<String, LinkedHashMap<String, String>> LRU_MAP = new ConcurrentHashMap<>();
 
     private static final ConcurrentMap<String, AtomicInteger> COUNTER_MAP = new ConcurrentHashMap<>();
 
@@ -105,5 +108,36 @@ public class Route {
         }
 
         return set.stream().filter(predicate).filter(Objects::nonNull).findFirst().orElse(null);
+    }
+
+    public static String lru(String serviceKey, TreeSet<String> set) {
+        LinkedHashMap<String, String> lruCache = LRU_MAP.get(serviceKey);
+        if (Objects.isNull(lruCache)) {
+            lruCache = new LruCache<>(10000);
+            LRU_MAP.putIfAbsent(serviceKey, lruCache);
+        }
+
+        // put new
+        for (String address : set) {
+            if (!lruCache.containsKey(address)) {
+                lruCache.put(address, address);
+            }
+        }
+
+        // remove old
+        List<String> delKeys = new ArrayList<>();
+        for (String existKey : lruCache.keySet()) {
+            if (!set.contains(existKey)) {
+                delKeys.add(existKey);
+            }
+        }
+        if (!delKeys.isEmpty()) {
+            for (String delKey : delKeys) {
+                lruCache.remove(delKey);
+            }
+        }
+
+        String eldestKey = lruCache.entrySet().iterator().next().getKey();
+        return lruCache.get(eldestKey);
     }
 }
