@@ -23,6 +23,22 @@ public class Route {
 
     private static final int VIRTUAL_NODE_NUM = 100;
 
+    public static <T> T first(TreeSet<T> set) {
+        if (CollectionUtil.isEmpty(set)) {
+            return null;
+        }
+
+        return set.first();
+    }
+
+    public static <T> T last(TreeSet<T> set) {
+        if (CollectionUtil.isEmpty(set)) {
+            return null;
+        }
+
+        return set.last();
+    }
+
     public static <T> T routeLoop(String serviceKey, TreeSet<T> set) {
         if (CollectionUtil.isEmpty(set)) {
             return null;
