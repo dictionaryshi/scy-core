@@ -97,11 +97,9 @@ public class LocalCacheUtil {
         }
 
         Set<Map.Entry<String, LocalCacheData>> entries = LOCAL_CACHE.entrySet();
-        entries.forEach(entry -> {
+        entries.removeIf(entry -> {
             LocalCacheData localCacheData = entry.getValue();
-            if (Objects.nonNull(localCacheData) && System.currentTimeMillis() >= localCacheData.getTimeout()) {
-                LOCAL_CACHE.remove(entry.getKey());
-            }
+            return Objects.nonNull(localCacheData) && System.currentTimeMillis() >= localCacheData.getTimeout();
         });
     }
 }
