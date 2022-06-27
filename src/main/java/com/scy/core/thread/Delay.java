@@ -7,8 +7,6 @@ import lombok.ToString;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-
 /**
  * @author : shichunyang
  * Date    : 2022/6/27
@@ -27,11 +25,11 @@ public class Delay<T> implements Delayed {
 
     @Override
     public long getDelay(TimeUnit unit) {
-        return unit.convert(delayTime - System.nanoTime(), NANOSECONDS);
+        return unit.convert(delayTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     }
 
     @Override
     public int compareTo(Delayed o) {
-        return Long.compare(this.getDelay(NANOSECONDS), o.getDelay(NANOSECONDS));
+        return Long.compare(this.getDelay(TimeUnit.MILLISECONDS), o.getDelay(TimeUnit.MILLISECONDS));
     }
 }
