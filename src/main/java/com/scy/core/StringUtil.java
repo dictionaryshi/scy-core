@@ -37,6 +37,8 @@ public class StringUtil {
 
     public static final String PERCENT = "%";
 
+    public static final String BR = "</br>";
+
     public static final String CR = StringUtils.CR;
     public static final String LF = StringUtils.LF;
     public static final String CRLF = CR + LF;
@@ -150,5 +152,13 @@ public class StringUtil {
 
     public static String emptyIfNull(String str) {
         return str == null ? EMPTY : str;
+    }
+
+    public static String replaceBr(String str) {
+        if (StringUtil.isEmpty(str)) {
+            return StringUtil.EMPTY;
+        }
+
+        return str.replace(SystemUtil.SYSTEM_LINE_BREAK, BR);
     }
 }
