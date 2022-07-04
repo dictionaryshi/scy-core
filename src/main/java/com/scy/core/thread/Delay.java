@@ -1,8 +1,6 @@
 package com.scy.core.thread;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Delay<T> implements Delayed {
 
     private long delayTime;
