@@ -1,6 +1,5 @@
 package com.scy.core.thread;
 
-import com.scy.core.format.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -21,6 +20,7 @@ public class ThreadUtil {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
             log.info("quietSleep interrupt");
+            Thread.currentThread().interrupt();
         }
     }
 }
