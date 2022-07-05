@@ -20,7 +20,7 @@ public class ThreadUtil {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            log.info(MessageUtil.format("quietSleep interrupt", e));
+            log.info("quietSleep interrupt");
         }
     }
 }
