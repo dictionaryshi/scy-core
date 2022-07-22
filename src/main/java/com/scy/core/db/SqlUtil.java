@@ -55,15 +55,15 @@ public class SqlUtil {
 
         sb.append("<script>");
         sb.append("update ").append(table);
-        sb.append(" set ");
-        sb.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
+        sb.append(" set");
+        sb.append("<trim prefix=\"\" suffix=\"\" suffixOverrides=\",\">");
         fieldNames.forEach(
                 fieldName -> sb.append(StringUtil.humpToLine(fieldName))
                         .append(" = ")
-                        .append("<foreach collection=\"list\" item=\"entry\" separator=\" \" open=\"case id\" close=\"end\">")
+                        .append("<foreach collection=\"list\" item=\"entry\" separator=\" \" open=\"case id \" close=\" end \">")
                         .append("when #{entry.id} then #{entry.").append(fieldName).append("}")
                         .append("</foreach>")
-                        .append(StringUtil.COMMA)
+                        .append(StringUtil.COMMA).append(" ")
         );
         sb.append("</trim>");
 
