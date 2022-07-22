@@ -46,4 +46,32 @@ public class SqlUtil {
         sb.append("</script>");
         return sb.toString();
     }
+
+    public static <T> String batchUpdate(Class<T> clazz, String table, List<String> includeFields) {
+        StringBuilder sb = new StringBuilder();
+        Field[] declaredFields = clazz.getDeclaredFields();
+        List<String> fieldNames = Stream.of(declaredFields).map(Field::getName)
+                .filter(fieldName -> CollectionUtil.emptyIfNull(includeFields).contains(fieldName)).collect(Collectors.toList());
+
+        sb.append("<script>");
+        sb.append("update ").append(table);
+        sb.append(" set");
+        sb.append("<trim prefix=\"\" suffix=\"\" suffixOverrides=\",\">");
+        fieldNames.forEach(
+                fieldName -> sb.append(StringUtil.humpToLine(fieldName))
+                        .append(" = ")
+                        .append("<foreach collection=\"list\" item=\"entry\" separator=\" \" open=\"case id \" close=\" end \">")
+                        .append("when #{entry.id} then #{entry.").append(fieldName).append("}")
+                        .append("</foreach>")
+                        .append(StringUtil.COMMA).append(" ")
+        );
+        sb.append("</trim>");
+
+        sb.append(" where id in ");
+        sb.append("<foreach collection=\"list\" item=\"entry\" separator=\",\" open=\"(\" close=\")\">");
+        sb.append("#{entry.id}");
+        sb.append("</foreach>");
+        sb.append("</script>");
+        return sb.toString();
+    }
 }
