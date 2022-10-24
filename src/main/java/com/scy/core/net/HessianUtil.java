@@ -71,4 +71,9 @@ public class HessianUtil {
             }
         }
     }
+
+    public static <T> T clone2Obj(T object) {
+        byte[] serialize = HessianUtil.serialize(object);
+        return HessianUtil.deserialize(serialize);
+    }
 }
