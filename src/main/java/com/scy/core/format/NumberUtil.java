@@ -4,6 +4,7 @@ import com.scy.core.ObjectUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * NumberUtil
@@ -164,5 +165,13 @@ public class NumberUtil {
 
     public static int modulo(long i, int target) {
         return (int) abs(i % target);
+    }
+
+    public boolean isInRange(Number value, Number min, Number max) {
+        if (Objects.isNull(value)) {
+            return Boolean.FALSE;
+        }
+
+        return value.doubleValue() >= min.doubleValue() && value.doubleValue() <= max.doubleValue();
     }
 }
