@@ -32,6 +32,9 @@ public class Snowflake {
 
     private final long timestampLeftShift = sequenceBits + workerIdBits;
 
+    private final long timestampBit = 63 - timestampLeftShift;
+    private final long timestampMax = ~(-1L << timestampBit);
+
     private final long workerId;
 
     private long sequence = 0L;
@@ -79,5 +82,9 @@ public class Snowflake {
 
     public long getWorkerId() {
         return workerId;
+    }
+
+    public long getTimestamp(long id) {
+        return ((id >> timestampLeftShift) & timestampMax) + twepoch;
     }
 }
