@@ -1,6 +1,7 @@
 package com.scy.core.snowflake;
 
 import com.google.common.base.Preconditions;
+import com.scy.core.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -59,7 +60,7 @@ public class Snowflake {
                 timestamp = nextMillis(lastTimestamp);
             }
         } else {
-            sequence = 0;
+            sequence = RandomUtil.nextLong(0, sequenceMask);
         }
 
         lastTimestamp = timestamp;
