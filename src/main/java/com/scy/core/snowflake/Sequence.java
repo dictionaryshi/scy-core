@@ -79,4 +79,8 @@ public class Sequence {
     public long getWorkerId() {
         return workerId;
     }
+
+    public static long getBiz(long orderId) {
+        return (orderId / BIZ_FIX) - ((orderId / TIMESTAMP_FIX) * 1000L);
+    }
 }
