@@ -1,12 +1,16 @@
 package com.scy.core;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Range;
 import com.scy.core.format.DateUtil;
 import com.scy.core.format.NumberUtil;
 import com.scy.core.util.LruCache;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
@@ -139,5 +143,50 @@ public class Route {
 
         String eldestKey = lruCache.entrySet().iterator().next().getKey();
         return lruCache.get(eldestKey);
+    }
+
+    public static <T> T routeRandomWeight(TreeMap<T, Double> weightMap) {
+        Pair<Double, Map<T, Range<Double>>> pair = weightInit(weightMap);
+
+        double totalWeight = pair.getLeft();
+        Map<T, Range<Double>> weightsMap = pair.getRight();
+
+        double random = ThreadLocalRandom.current().nextDouble() * totalWeight;
+
+        // 判断结果落在哪个区间
+        for (Map.Entry<T, Range<Double>> entry : weightsMap.entrySet()) {
+            if (entry.getValue().contains(random)) {
+                return entry.getKey();
+            }
+        }
+
+        return null;
+    }
+
+    private static <T> Pair<Double, Map<T, Range<Double>>> weightInit(TreeMap<T, Double> weightMap) {
+        Map<T, Range<Double>> weightsMap = Maps.newHashMap();
+
+        // 区间起点
+        double rangeFrom = 0D;
+
+        // 总权重
+        double totalWeight = 0D;
+
+        for (Map.Entry<T, Double> entry : weightMap.entrySet()) {
+            if (entry.getValue() <= 0D) {
+                continue;
+            }
+
+            totalWeight += entry.getValue();
+
+            // 区间终点(开区间)
+            double rangeTo = rangeFrom + entry.getValue();
+
+            weightsMap.put(entry.getKey(), Range.closedOpen(rangeFrom, rangeTo));
+
+            rangeFrom = rangeTo;
+        }
+
+        return Pair.of(totalWeight, weightsMap);
     }
 }
