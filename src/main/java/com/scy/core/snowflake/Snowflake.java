@@ -60,7 +60,7 @@ public class Snowflake {
                 timestamp = nextMillis(lastTimestamp);
             }
         } else {
-            sequence = RandomUtil.nextLong(0, sequenceMask);
+            sequence = RandomUtil.nextLong(0, 1000);
         }
 
         lastTimestamp = timestamp;

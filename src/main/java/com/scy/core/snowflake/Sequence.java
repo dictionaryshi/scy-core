@@ -55,7 +55,7 @@ public class Sequence {
                 timestamp = nextMillis(lastTimestamp);
             }
         } else {
-            sequence = RandomUtil.nextLong(0, sequenceMax);
+            sequence = RandomUtil.nextLong(0, 1000);
         }
 
         lastTimestamp = timestamp;
