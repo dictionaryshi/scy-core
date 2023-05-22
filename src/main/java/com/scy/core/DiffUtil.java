@@ -76,7 +76,7 @@ public class DiffUtil {
     }
 
     public static Map<String, Object> diff(Object o, Object n, List<String> ignoreFields) {
-        return diffJson(JsonUtil.object2Json(CollectionUtil.newHashMap("o", o)), JsonUtil.object2Json(CollectionUtil.newHashMap("n", n)), ignoreFields);
+        return diffJson(JsonUtil.object2Json(CollectionUtil.newHashMap("o", o)), JsonUtil.object2Json(CollectionUtil.newHashMap("o", n)), ignoreFields);
     }
 
     public static Map<String, Object> flatMap(Map<String, Object> map) {
