@@ -75,6 +75,10 @@ public class DiffUtil {
         return !CollectionUtil.isEmpty(diff(before, after));
     }
 
+    public static Map<String, Object> diff(Object o, Object n, List<String> ignoreFields) {
+        return diffJson(JsonUtil.object2Json(CollectionUtil.newHashMap("o", o)), JsonUtil.object2Json(CollectionUtil.newHashMap("n", n)), ignoreFields);
+    }
+
     public static Map<String, Object> flatMap(Map<String, Object> map) {
         if (CollectionUtil.isEmpty(map)) {
             return Collections.emptyMap();
