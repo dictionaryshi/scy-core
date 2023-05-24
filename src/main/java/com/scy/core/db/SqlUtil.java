@@ -1,8 +1,6 @@
 package com.scy.core.db;
 
-import com.scy.core.CollectionUtil;
 import com.scy.core.StringUtil;
-import com.scy.core.SystemUtil;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -20,17 +18,20 @@ public class SqlUtil {
     private SqlUtil() {
     }
 
-    public static <T> String batchInsert(Class<T> clazz, String table, List<String> excludeFields) {
+    public static <T> String batchInsert(Class<T> clazz, String table) {
         StringBuilder sb = new StringBuilder();
         Field[] declaredFields = clazz.getDeclaredFields();
-        List<String> fieldNames = Stream.of(declaredFields).map(Field::getName)
-                .filter(fieldName -> !CollectionUtil.emptyIfNull(excludeFields).contains(fieldName)).collect(Collectors.toList());
+        List<String> fieldNames = Stream.of(declaredFields).map(Field::getName).collect(Collectors.toList());
 
         sb.append("<script>");
         sb.append("insert into ").append(table);
         sb.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
         fieldNames.forEach(
-                fieldName -> sb.append(StringUtil.humpToLine(fieldName)).append(StringUtil.COMMA)
+                fieldName -> {
+                    sb.append("<if test=\"rows[0].").append(fieldName).append(" != null\">");
+                    sb.append(StringUtil.humpToLine(fieldName)).append(StringUtil.COMMA);
+                    sb.append("</if>");
+                }
         );
         sb.append("</trim>");
 
@@ -39,7 +40,11 @@ public class SqlUtil {
         sb.append("<foreach collection=\"list\" item=\"entry\" separator=\",\">");
         sb.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
         fieldNames.forEach(
-                fieldName -> sb.append("#{").append("entry.").append(fieldName).append("}").append(StringUtil.COMMA)
+                fieldName -> {
+                    sb.append("<if test=\"rows[0].").append(fieldName).append(" != null\">");
+                    sb.append("#{").append("entry.").append(fieldName).append("}").append(StringUtil.COMMA);
+                    sb.append("</if>");
+                }
         );
         sb.append("</trim>");
         sb.append("</foreach>");
@@ -47,23 +52,25 @@ public class SqlUtil {
         return sb.toString();
     }
 
-    public static <T> String batchUpdate(Class<T> clazz, String table, List<String> includeFields) {
+    public static <T> String batchUpdate(Class<T> clazz, String table) {
         StringBuilder sb = new StringBuilder();
         Field[] declaredFields = clazz.getDeclaredFields();
-        List<String> fieldNames = Stream.of(declaredFields).map(Field::getName)
-                .filter(fieldName -> CollectionUtil.emptyIfNull(includeFields).contains(fieldName)).collect(Collectors.toList());
+        List<String> fieldNames = Stream.of(declaredFields).map(Field::getName).collect(Collectors.toList());
 
         sb.append("<script>");
         sb.append("update ").append(table);
         sb.append(" set");
         sb.append("<trim prefix=\"\" suffix=\"\" suffixOverrides=\",\">");
         fieldNames.forEach(
-                fieldName -> sb.append(StringUtil.humpToLine(fieldName))
+                fieldName -> sb
+                        .append("<if test=\"rows[0].").append(fieldName).append(" != null\">")
+                        .append(StringUtil.humpToLine(fieldName))
                         .append(" = ")
                         .append("<foreach collection=\"list\" item=\"entry\" separator=\" \" open=\"case id \" close=\" end \">")
                         .append("when #{entry.id} then #{entry.").append(fieldName).append("}")
                         .append("</foreach>")
                         .append(StringUtil.COMMA).append(" ")
+                        .append("</if>")
         );
         sb.append("</trim>");
 
