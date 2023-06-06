@@ -45,11 +45,12 @@ public class RsaUtil {
         KeyPairGenerator keyPairGenerator;
         try {
             keyPairGenerator = KeyPairGenerator.getInstance(SIGN_TYPE, PROVIDER);
+            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+            keyPairGenerator.initialize(length, secureRandom);
         } catch (Throwable e) {
             return null;
         }
 
-        keyPairGenerator.initialize(length);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
         RsaKeyBO rsaKeyBO = new RsaKeyBO();
