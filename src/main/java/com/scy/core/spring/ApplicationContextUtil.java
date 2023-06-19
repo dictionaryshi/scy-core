@@ -5,7 +5,10 @@ import com.scy.core.StringUtil;
 import com.scy.core.format.DateUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
@@ -16,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -126,5 +130,27 @@ public class ApplicationContextUtil {
 
     public static void replaceMapPropertySource(String name, Map<String, Object> source) {
         getMutablePropertySources().replace(name, new MapPropertySource(name, source));
+    }
+
+    public static <T> T registerBean(String name, Class<T> clazz, T object, Object... args) {
+        ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
+
+        BeanDefinitionBuilder beanDefinitionBuilder;
+        if (Objects.isNull(object)) {
+            beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
+        } else {
+            beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz, () -> object);
+        }
+
+        for (Object arg : args) {
+            beanDefinitionBuilder.addConstructorArgValue(arg);
+        }
+
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
+        beanFactory.setAllowBeanDefinitionOverriding(Boolean.TRUE);
+
+        beanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getBeanDefinition());
+
+        return applicationContext.getBean(name, clazz);
     }
 }
