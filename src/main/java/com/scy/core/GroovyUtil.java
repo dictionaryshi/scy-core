@@ -5,6 +5,7 @@ import com.scy.core.format.MessageUtil;
 import com.scy.core.reflect.ClassUtil;
 import com.scy.core.spring.SpringInjectUtil;
 import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
@@ -25,7 +26,7 @@ public class GroovyUtil {
 
     private static final ConcurrentMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
 
-    private static final ConcurrentMap<String, Object> OBJECT_CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<String, GroovyObject> OBJECT_CACHE = new ConcurrentHashMap<>();
 
     @SuppressWarnings(ClassUtil.UNCHECKED)
     public static <T> T parseClass(String codeSource) {
@@ -38,9 +39,9 @@ public class GroovyUtil {
                 CLASS_CACHE.putIfAbsent(md5Str, clazz);
             }
 
-            Object object = OBJECT_CACHE.get(md5Str);
+            GroovyObject object = OBJECT_CACHE.get(md5Str);
             if (Objects.isNull(object)) {
-                object = clazz.newInstance();
+                object = (GroovyObject) clazz.newInstance();
                 SpringInjectUtil.injectService(object);
                 OBJECT_CACHE.putIfAbsent(md5Str, object);
             }
