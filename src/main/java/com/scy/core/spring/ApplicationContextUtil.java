@@ -151,6 +151,8 @@ public class ApplicationContextUtil {
 
         beanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getBeanDefinition());
 
+        beanFactory.setAllowBeanDefinitionOverriding(Boolean.FALSE);
+
         return applicationContext.getBean(name, clazz);
     }
 }
