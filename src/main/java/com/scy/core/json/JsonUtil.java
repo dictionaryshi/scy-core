@@ -194,7 +194,7 @@ public class JsonUtil {
         }
     }
 
-    private static JavaType getJavaType(Type type) {
+    public static JavaType getJavaType(Type type) {
         if (type instanceof ParameterizedType) {
             // 泛型
             Class<?> rawType = (Class<?>) ((ParameterizedType) type).getRawType();
@@ -205,11 +205,15 @@ public class JsonUtil {
                 // 泛型也可能带有泛型, 递归获取
                 javaTypes[i] = getJavaType(actualTypeArguments[i]);
             }
-            return TypeFactory.defaultInstance().constructParametricType(rawType, javaTypes);
+            return OBJECT_MAPPER.getTypeFactory().constructParametricType(rawType, javaTypes);
         } else {
             // 简单类型
             Class<?> rawType = (Class<?>) type;
-            return TypeFactory.defaultInstance().constructParametricType(rawType, new JavaType[]{});
+            return OBJECT_MAPPER.getTypeFactory().constructSimpleType(rawType, null);
         }
+    }
+
+    public static JavaType getJavaType(String typeStr) {
+        return OBJECT_MAPPER.getTypeFactory().constructFromCanonical(typeStr);
     }
 }
