@@ -3,6 +3,7 @@ package com.scy.core.spring;
 import com.scy.core.ObjectUtil;
 import com.scy.core.StringUtil;
 import com.scy.core.format.DateUtil;
+import org.springframework.aop.framework.Advised;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -77,6 +78,15 @@ public class ApplicationContextUtil {
 
     public static String getProperty(String key) {
         return applicationContext.getEnvironment().getProperty(key);
+    }
+
+    public static Object getTarget(Object proxy) throws Exception {
+        Advised advised = (Advised) proxy;
+        return advised.getTargetSource().getTarget();
+    }
+
+    public static Object getBean(String name) throws BeansException {
+        return applicationContext.getBean(name);
     }
 
     public static <T> T getBean(String name, Class<T> requiredType) throws BeansException {

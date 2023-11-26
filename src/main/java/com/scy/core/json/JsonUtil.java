@@ -116,7 +116,7 @@ public class JsonUtil {
         return json2Object(json, getJavaType(method.getGenericReturnType()));
     }
 
-    private static <T> T json2Object(String json, JavaType javaType) {
+    public static <T> T json2Object(String json, JavaType javaType) {
         if (StringUtil.isEmpty(json)) {
             return null;
         }
