@@ -1,6 +1,8 @@
 package com.scy.core.db;
 
 import com.scy.core.StringUtil;
+import com.scy.core.exception.BusinessException;
+import com.scy.core.format.MessageUtil;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -80,5 +82,21 @@ public class SqlUtil {
         sb.append("</foreach>");
         sb.append("</script>");
         return sb.toString();
+    }
+
+    public static void checkOneRecord(int result) {
+        if (result == 1) {
+            return;
+        }
+
+        throw new BusinessException(MessageUtil.format("checkOneRecord", "result", result));
+
+    }
+
+    public static void checkXRecord(int expectCount, int result) {
+        if (result == expectCount) {
+            return;
+        }
+        throw new BusinessException(MessageUtil.format("checkXRecord", "expectCount", expectCount, "result", result));
     }
 }
