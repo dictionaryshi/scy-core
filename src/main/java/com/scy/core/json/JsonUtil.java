@@ -84,6 +84,7 @@ public class JsonUtil {
         return jsonNode.isEmpty();
     }
 
+    @SuppressWarnings(ClassUtil.UNCHECKED)
     public static <T> T json2Object(String json, TypeReference<T> typeReference) {
         if (StringUtil.isEmpty(json)) {
             return null;
@@ -124,6 +125,7 @@ public class JsonUtil {
         return json2Object(json, getJavaType(method.getGenericReturnType()));
     }
 
+    @SuppressWarnings(ClassUtil.UNCHECKED)
     public static <T> T json2Object(String json, JavaType javaType) {
         if (StringUtil.isEmpty(json)) {
             return null;
