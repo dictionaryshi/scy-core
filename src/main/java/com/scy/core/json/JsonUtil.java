@@ -3,7 +3,6 @@ package com.scy.core.json;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.scy.core.ObjectUtil;
 import com.scy.core.StringUtil;
 import com.scy.core.SystemUtil;
@@ -51,6 +50,10 @@ public class JsonUtil {
             return StringUtil.EMPTY;
         }
 
+        if (object instanceof String) {
+            return (String) object;
+        }
+
         try {
             return OBJECT_MAPPER.writeValueAsString(object);
         } catch (Exception e) {
@@ -86,6 +89,11 @@ public class JsonUtil {
             return null;
         }
 
+        Type type = typeReference.getType();
+        if (Objects.equals(type, String.class)) {
+            return (T) json;
+        }
+
         try {
             return OBJECT_MAPPER.readValue(json, typeReference);
         } catch (Exception e) {
@@ -119,6 +127,10 @@ public class JsonUtil {
     public static <T> T json2Object(String json, JavaType javaType) {
         if (StringUtil.isEmpty(json)) {
             return null;
+        }
+
+        if (Objects.equals(javaType.getRawClass(), String.class)) {
+            return (T) json;
         }
 
         try {
