@@ -78,6 +78,10 @@ public class NumberUtil {
         return Math.min(a, b);
     }
 
+    public static Double pow(double a, double b) {
+        return Math.pow(a, b);
+    }
+
     public static BigDecimal add(Number add, Number... numbers) {
         add = null2Zero(add);
         BigDecimal result = new BigDecimal(add.toString());
