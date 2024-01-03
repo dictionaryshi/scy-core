@@ -42,7 +42,15 @@ public class Try {
         Retryer<T> retryer = RetryerBuilder.<T>newBuilder()
                 .retryIfExceptionOfType(Throwable.class)
                 .withWaitStrategy(waitStrategy)
-                .withStopStrategy(StopStrategies.stopAfterAttempt(retries + 1))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(retries))
+                .withRetryListener(new RetryListener() {
+                    @Override
+                    public <T> void onRetry(Attempt<T> attempt) {
+                        if ((attempt.getAttemptNumber() == retries) && attempt.hasException()) {
+                            System.out.println("fail call back");
+                        }
+                    }
+                })
                 .build();
 
         return retryer.call(supplier::get);
