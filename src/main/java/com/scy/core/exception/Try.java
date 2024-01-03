@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 /**
@@ -29,19 +29,23 @@ public class Try {
         }
     }
 
-    public static <T> T of(Supplier<T> supplier, int retries) {
-        try {
-            Retryer<T> retryer = RetryerBuilder.<T>newBuilder()
-                    .retryIfExceptionOfType(Throwable.class)
-                    .withWaitStrategy(WaitStrategies.fixedWait(100, TimeUnit.MILLISECONDS))
-                    .withStopStrategy(StopStrategies.stopAfterAttempt(retries + 1))
-                    .build();
+    public static <T> T of(Supplier<T> supplier, int retries, int delayTime) throws ExecutionException, RetryException {
+        WaitStrategy waitStrategy = attempt -> {
+            // 获取当前尝试的次数
+            long attemptNumber = attempt.getAttemptNumber();
+            // 计算指数退避的延迟时间
+            double exponentialDelay = Math.pow(2, attemptNumber - 1) * delayTime;
+            // 转换为long类型，并确保不超过最大延迟
+            return Math.min((long) exponentialDelay, 60_000L);
+        };
 
-            return retryer.call(supplier::get);
-        } catch (Throwable e) {
-            log.error(MessageUtil.format("Try Catch", e, "retries", retries));
-            return null;
-        }
+        Retryer<T> retryer = RetryerBuilder.<T>newBuilder()
+                .retryIfExceptionOfType(Throwable.class)
+                .withWaitStrategy(waitStrategy)
+                .withStopStrategy(StopStrategies.stopAfterAttempt(retries + 1))
+                .build();
+
+        return retryer.call(supplier::get);
     }
 
     public static void run(Runnable runnable) {
