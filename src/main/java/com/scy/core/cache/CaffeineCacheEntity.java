@@ -43,12 +43,16 @@ public class CaffeineCacheEntity<K, V> {
                 .buildAsync((key, executor) -> CompletableFuture.supplyAsync(() -> sourceCall.apply(key), executor));
     }
 
-    public V getValue(K key) {
-        V value = cache.get(key).join();
-        CacheStats stats = cache.synchronous().stats();
-        System.out.println(value);
-        System.out.println(stats.hitRate());
-        return value;
+    public CompletableFuture<V> getValue(K key) {
+        return cache.get(key).whenComplete((value, throwable) -> {
+            if (throwable == null) {
+                CacheStats stats = cache.synchronous().stats();
+                System.out.println(value);
+                System.out.println(stats.hitRate());
+            } else {
+                throwable.printStackTrace();
+            }
+        });
     }
 
     public V getSourceCall(K key) {
