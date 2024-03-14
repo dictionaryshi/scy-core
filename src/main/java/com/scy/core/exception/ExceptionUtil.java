@@ -27,6 +27,7 @@ public class ExceptionUtil {
         String[] exceptionMessages = ExceptionUtils.getStackFrames(throwable);
         String traceId = TraceUtil.getTraceId();
         Stream.of(exceptionMessages).forEach(exception -> sb.append(traceId).append(StringUtil.SPACE).append(exception).append(SystemUtil.SYSTEM_LINE_BREAK));
+        sb.setLength(sb.length() - 1);
         return sb.toString();
     }
 
@@ -35,6 +36,7 @@ public class ExceptionUtil {
         String[] exceptionMessages = ExceptionUtils.getStackFrames(throwable);
         sb.append(SystemUtil.SYSTEM_LINE_BREAK);
         Stream.of(exceptionMessages).forEach(exception -> sb.append(exception).append(SystemUtil.SYSTEM_LINE_BREAK));
+        sb.setLength(sb.length() - 1);
         return sb.toString();
     }
 

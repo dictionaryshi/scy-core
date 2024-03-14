@@ -20,110 +20,45 @@ public class MessageUtil {
 
     private final Throwable throwable;
 
-    private final LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+    private final LinkedHashMap<Object, Object> params;
 
-    private MessageUtil(String message, Throwable throwable) {
+    private MessageUtil(String message, Throwable throwable, Object... keyValuePairs) {
         this.message = message;
         this.throwable = throwable;
+        this.params = new LinkedHashMap<>();
+
+        for (int i = 0; i < keyValuePairs.length; i += 2) {
+            if (i + 1 < keyValuePairs.length) {
+                Object key = keyValuePairs[i];
+                Object value = keyValuePairs[i + 1];
+                this.params.put(key, value);
+            }
+        }
     }
 
-    public static String format(String message, Throwable throwable) {
-        MessageUtil messageUtil = new MessageUtil(message, throwable);
+    public static String format(String message, Throwable throwable, Object... keyValuePairs) {
+        MessageUtil messageUtil = new MessageUtil(message, throwable, keyValuePairs);
         return messageUtil.toString();
     }
 
-    public static String format(String message, Throwable throwable, String k1, Object v1) {
-        MessageUtil messageUtil = new MessageUtil(message, throwable);
-        messageUtil.params.put(k1, v1);
-        return messageUtil.toString();
-    }
-
-    public static String format(String message, Throwable throwable, String k1, Object v1, String k2, Object v2) {
-        MessageUtil messageUtil = new MessageUtil(message, throwable);
-        messageUtil.params.put(k1, v1);
-        messageUtil.params.put(k2, v2);
-        return messageUtil.toString();
-    }
-
-    public static String format(String message, Throwable throwable, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
-        MessageUtil messageUtil = new MessageUtil(message, throwable);
-        messageUtil.params.put(k1, v1);
-        messageUtil.params.put(k2, v2);
-        messageUtil.params.put(k3, v3);
-        return messageUtil.toString();
-    }
-
-    public static String format(String message, Throwable throwable, String k1, Object v1, String k2, Object v2, String k3, Object v3, String k4, Object v4) {
-        MessageUtil messageUtil = new MessageUtil(message, throwable);
-        messageUtil.params.put(k1, v1);
-        messageUtil.params.put(k2, v2);
-        messageUtil.params.put(k3, v3);
-        messageUtil.params.put(k4, v4);
-        return messageUtil.toString();
-    }
-
-    public static String format(String message, Throwable throwable, String k1, Object v1, String k2, Object v2, String k3, Object v3, String k4, Object v4, String k5, Object v5) {
-        MessageUtil messageUtil = new MessageUtil(message, throwable);
-        messageUtil.params.put(k1, v1);
-        messageUtil.params.put(k2, v2);
-        messageUtil.params.put(k3, v3);
-        messageUtil.params.put(k4, v4);
-        messageUtil.params.put(k5, v5);
-        return messageUtil.toString();
-    }
-
-    public static String format(String message, Throwable throwable, String k1, Object v1, String k2, Object v2, String k3, Object v3, String k4, Object v4, String k5, Object v5, String k6, Object v6) {
-        MessageUtil messageUtil = new MessageUtil(message, throwable);
-        messageUtil.params.put(k1, v1);
-        messageUtil.params.put(k2, v2);
-        messageUtil.params.put(k3, v3);
-        messageUtil.params.put(k4, v4);
-        messageUtil.params.put(k5, v5);
-        messageUtil.params.put(k6, v6);
-        return messageUtil.toString();
-    }
-
-    public static String format(String message) {
-        return format(message, null);
-    }
-
-    public static String format(String message, String k1, Object v1) {
-        return format(message, null, k1, v1);
-    }
-
-    public static String format(String message, String k1, Object v1, String k2, Object v2) {
-        return format(message, null, k1, v1, k2, v2);
-    }
-
-    public static String format(String message, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
-        return format(message, null, k1, v1, k2, v2, k3, v3);
-    }
-
-    public static String format(String message, String k1, Object v1, String k2, Object v2, String k3, Object v3, String k4, Object v4) {
-        return format(message, null, k1, v1, k2, v2, k3, v3, k4, v4);
-    }
-
-    public static String format(String message, String k1, Object v1, String k2, Object v2, String k3, Object v3, String k4, Object v4, String k5, Object v5) {
-        return format(message, null, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
-    }
-
-    public static String format(String message, String k1, Object v1, String k2, Object v2, String k3, Object v3, String k4, Object v4, String k5, Object v5, String k6, Object v6) {
-        return format(message, null, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
+    public static String format(String message, Object... keyValuePairs) {
+        return format(message, null, keyValuePairs);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(message).append(StringUtil.SPACE);
+        sb.append(message);
 
         if (!params.isEmpty()) {
+            sb.append(StringUtil.SPACE);
+
             params.forEach((key, valueObject) -> {
                 String value = ObjectUtil.obj2Str(valueObject);
                 sb.append(key).append(StringUtil.ARROW).append(StringUtil.replaceCrLf(value, StringUtil.SPACE)).append(StringUtil.COMMA).append(StringUtil.SPACE);
             });
-            sb.deleteCharAt(sb.length() - 2);
-        } else {
-            sb.deleteCharAt(sb.length() - 1);
+
+            sb.setLength(sb.length() - 2);
         }
 
         if (!Objects.isNull(throwable)) {
