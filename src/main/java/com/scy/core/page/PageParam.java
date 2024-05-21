@@ -46,3 +46,34 @@ public class PageParam {
         return (this.page - 1) * limit;
     }
 }
+
+/*
+        int safetyCounter = 0;
+        int count = 100;
+        long lastProcessedId = 0;
+        List<SkuCategoryEntity> list;
+        while (true) {
+            list = selectListByPage(lastProcessedId, count);
+
+            // 检查查询结果是否为空, 为空则退出循环
+            if (list.isEmpty()) {
+                break;
+            }
+
+            // 处理查询结果
+            processList(list);
+
+            // 获取当前页的最后一条记录的ID
+            lastProcessedId = list.get(list.size() - 1).getId();
+
+            // 如果当前页的记录数小于每页最大记录数, 则表示已经是最后一页
+            if (list.size() < count) {
+                break;
+            }
+
+            // 安全计数器增加, 超过阈值则退出循环
+            if (++safetyCounter > 100_0000) {
+                break;
+            }
+        }
+ */
