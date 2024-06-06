@@ -271,6 +271,14 @@ public class CollectionUtil {
         return map.computeIfAbsent(key, mappingFunction);
     }
 
+    public static <K, V> V computeIfPresent(final Map<K, V> map, K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        return map.computeIfPresent(key, remappingFunction);
+    }
+
+    public static <K, V> V compute(final Map<K, V> map, K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        return map.compute(key, remappingFunction);
+    }
+
     public static <T> List<T> mergeList(List<List<T>> lists) {
         return emptyIfNull(lists).stream()
                 .filter(list -> !isEmpty(list))
