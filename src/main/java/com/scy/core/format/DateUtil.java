@@ -57,8 +57,6 @@ public class DateUtil {
 
     public static final long DAY = 24 * HOUR;
 
-    public static final int MAX_NANO = 999999999;
-
     public static final DateTimeFormatter ISO_LOCAL_DATE = DateTimeFormatter.ISO_LOCAL_DATE;
 
     public static final DateTimeFormatter ISO_LOCAL_TIME = DateTimeFormatter.ISO_LOCAL_TIME;
@@ -206,7 +204,6 @@ public class DateUtil {
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
-        cal.set(Calendar.MILLISECOND, 999);
         return cal.getTime();
     }
 
@@ -228,7 +225,6 @@ public class DateUtil {
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
-        cal.set(Calendar.MILLISECOND, 999);
         return cal.getTime();
     }
 
@@ -237,7 +233,7 @@ public class DateUtil {
     }
 
     public static LocalDateTime getDayEndTime(LocalDateTime localDateTime) {
-        return localDateTime.withHour(23).withMinute(59).withSecond(59).withNano(MAX_NANO);
+        return localDateTime.withHour(23).withMinute(59).withSecond(59);
     }
 
     public static LocalDateTime getMonthStartTime(LocalDateTime localDateTime) {
@@ -245,7 +241,7 @@ public class DateUtil {
     }
 
     public static LocalDateTime getMonthEndTime(LocalDateTime localDateTime) {
-        return localDateTime.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(MAX_NANO);
+        return localDateTime.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59);
     }
 
     public static LocalDateTime nowLocalDateTime() {
